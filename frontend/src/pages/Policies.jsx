@@ -1,3 +1,4 @@
+import PageLoader from '../components/common/PageLoader';
 import { useState, useEffect } from 'react';
 import { BookOpen, Search, Star, Clock, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { policiesAPI } from '../services/api';
@@ -55,7 +56,7 @@ function PolicyModal({ policy, onClose }) {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="glass-card max-w-2xl w-full max-h-[85vh] overflow-y-auto animate-slide-up"
+        className="glass-card max-w-2xl w-full max-h-[85vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-[#1a1833]/95 backdrop-blur-sm border-b border-white/5 px-6 py-4 flex items-start justify-between gap-4">
@@ -202,11 +203,7 @@ export default function Policies() {
         ))}
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-10 h-10 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
-        </div>
-      ) : (
+      <PageLoader loading={loading}>
         <div className="space-y-8">
           {!search && activeCategory === 'all' && popular.length > 0 && (
             <div>
@@ -214,13 +211,10 @@ export default function Policies() {
                 <Star size={12} className="text-amber-400" /> Popular Policies
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {popular.map(policy => (
-                  <PolicyCard key={policy.id} policy={policy} onClick={setSelectedPolicy} />
-                ))}
+                {popular.map(policy => <PolicyCard key={policy.id} policy={policy} onClick={setSelectedPolicy} />)}
               </div>
             </div>
           )}
-
           {(search || activeCategory !== 'all' ? policies : others).length > 0 && (
             <div>
               {!search && activeCategory === 'all' && popular.length > 0 && (
@@ -233,8 +227,7 @@ export default function Policies() {
               </div>
             </div>
           )}
-
-          {policies.length === 0 && (
+          {!loading && policies.length === 0 && (
             <div className="text-center py-16">
               <Search size={40} className="text-white/15 mx-auto mb-3" />
               <p className="text-white/30">No policies found for "{search}"</p>
@@ -244,7 +237,7 @@ export default function Policies() {
             </div>
           )}
         </div>
-      )}
+      </PageLoader>
 
       <PolicyModal policy={selectedPolicy} onClose={() => setSelectedPolicy(null)} />
     </div>

@@ -1,0 +1,21 @@
+{
+  "today": "2026-03-02",
+  "checkins": [
+    { "id": "p1", "mood": "thriving", "emoji": "🚀", "note": "Shipped a big feature today!", "department": "Engineering", "time": "09:12" },
+    { "id": "p2", "mood": "good",     "emoji": "😊", "note": "Great 1:1 with my manager.", "department": "Design",       "time": "09:35" },
+    { "id": "p3", "mood": "thriving", "emoji": "🚀", "note": "",                             "department": "Product",       "time": "09:41" },
+    { "id": "p4", "mood": "okay",     "emoji": "😐", "note": "A bit under the weather.",    "department": "Analytics",     "time": "10:02" },
+    { "id": "p5", "mood": "good",     "emoji": "😊", "note": "Love the new flex hours!",    "department": "Human Resources","time": "10:18" },
+    { "id": "p6", "mood": "good",     "emoji": "😊", "note": "",                             "department": "Engineering",   "time": "10:33" },
+    { "id": "p7", "mood": "thriving", "emoji": "🚀", "note": "Kudos to the whole team!",   "department": "Marketing",     "time": "10:55" }
+  ],
+  "history": [
+    { "date": "2026-02-24", "thriving": 5, "good": 8, "okay": 3, "rough": 1, "score": 78 },
+    { "date": "2026-02-25", "thriving": 7, "good": 7, "okay": 2, "rough": 0, "score": 84 },
+    { "date": "2026-02-26", "thriving": 6, "good": 9, "okay": 1, "rough": 0, "score": 86 },
+    { "date": "2026-02-27", "thriving": 4, "good": 8, "okay": 4, "rough": 1, "score": 75 },
+    { "date": "2026-02-28", "thriving": 8, "good": 6, "okay": 2, "rough": 0, "score": 88 },
+    { "date": "2026-03-01", "thriving": 6, "good": 8, "okay": 2, "rough": 1, "score": 81 },
+    { "date": "2026-03-02", "thriving": 3, "good": 3, "okay": 1, "rough": 0, "score": 79 }
+  ]
+}

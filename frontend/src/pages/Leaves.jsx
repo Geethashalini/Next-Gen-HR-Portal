@@ -48,7 +48,7 @@ function ApplyModal({ onClose, onSubmit }) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="glass-card max-w-md w-full animate-slide-up">
+      <div className="glass-card max-w-md w-full">
         <div className="flex items-center justify-between p-5 border-b border-white/5">
           <div className="flex items-center gap-2">
             <CalendarCheck size={18} className="text-primary-400" />

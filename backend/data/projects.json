@@ -1,0 +1,158 @@
+[
+  {
+    "id": "proj001",
+    "name": "OfficeVerse HR Portal",
+    "description": "Building the next-generation internal HR platform to improve employee experience and culture visibility across the organization.",
+    "status": "active",
+    "priority": "high",
+    "category": "Product",
+    "color": "#6366f1",
+    "icon": "🌌",
+    "startDate": "2026-01-10",
+    "endDate": "2026-06-30",
+    "progress": 62,
+    "teamLead": "emp002",
+    "members": [
+      { "employeeId": "emp001", "name": "Arjun Sharma",   "role": "Sr. Engineer",    "avatar": "AS", "photo": "https://randomuser.me/api/portraits/men/32.jpg",   "color": "#6366f1", "allocation": 80 },
+      { "employeeId": "emp002", "name": "Priya Menon",    "role": "Team Lead",       "avatar": "PM", "photo": "https://randomuser.me/api/portraits/women/44.jpg",  "color": "#8b5cf6", "allocation": 60 },
+      { "employeeId": "emp003", "name": "Sneha Kapoor",   "role": "UX Designer",     "avatar": "SK", "photo": "https://randomuser.me/api/portraits/women/26.jpg",  "color": "#ec4899", "allocation": 70 },
+      { "employeeId": "emp008", "name": "Karan Malhotra", "role": "DevOps Engineer", "avatar": "KM", "photo": "https://randomuser.me/api/portraits/men/22.jpg",    "color": "#14b8a6", "allocation": 50 }
+    ],
+    "milestones": [
+      { "title": "Design System v1", "done": true,  "date": "2026-02-01" },
+      { "title": "Core Modules Launch", "done": true,  "date": "2026-03-01" },
+      { "title": "Analytics Dashboard", "done": false, "date": "2026-04-15" },
+      { "title": "Mobile Optimization", "done": false, "date": "2026-06-01" }
+    ],
+    "tags": ["React", "Node.js", "Figma", "AWS"]
+  },
+  {
+    "id": "proj002",
+    "name": "Customer Analytics Platform",
+    "description": "ML-powered analytics platform to predict customer churn, identify growth opportunities, and deliver actionable insights to business teams.",
+    "status": "active",
+    "priority": "high",
+    "category": "Engineering",
+    "color": "#10b981",
+    "icon": "📊",
+    "startDate": "2025-11-01",
+    "endDate": "2026-05-31",
+    "progress": 78,
+    "teamLead": "emp005",
+    "members": [
+      { "employeeId": "emp005", "name": "Ananya Iyer",  "role": "Data Scientist",  "avatar": "AI", "photo": "https://randomuser.me/api/portraits/women/54.jpg",  "color": "#10b981", "allocation": 100 },
+      { "employeeId": "emp001", "name": "Arjun Sharma", "role": "Backend Engineer","avatar": "AS", "photo": "https://randomuser.me/api/portraits/men/32.jpg",    "color": "#6366f1", "allocation": 20 },
+      { "employeeId": "emp006", "name": "Vikram Singh", "role": "Product Owner",   "avatar": "VS", "photo": "https://randomuser.me/api/portraits/men/55.jpg",    "color": "#3b82f6", "allocation": 30 }
+    ],
+    "milestones": [
+      { "title": "Data Pipeline Setup",    "done": true,  "date": "2025-12-01" },
+      { "title": "Churn Model v1",         "done": true,  "date": "2026-01-15" },
+      { "title": "Dashboard Integration",  "done": true,  "date": "2026-02-28" },
+      { "title": "Production Deployment",  "done": false, "date": "2026-04-30" }
+    ],
+    "tags": ["Python", "TensorFlow", "PostgreSQL", "Grafana"]
+  },
+  {
+    "id": "proj003",
+    "name": "Brand Identity Refresh 2026",
+    "description": "Complete overhaul of the company's visual identity — new logo system, typography, color palette, and brand guidelines for all touchpoints.",
+    "status": "active",
+    "priority": "medium",
+    "category": "Design",
+    "color": "#f59e0b",
+    "icon": "🎨",
+    "startDate": "2026-01-20",
+    "endDate": "2026-04-30",
+    "progress": 45,
+    "teamLead": "emp004",
+    "members": [
+      { "employeeId": "emp004", "name": "Ravi Kumar",   "role": "Design Lead",  "avatar": "RK", "photo": "https://randomuser.me/api/portraits/men/41.jpg",    "color": "#f59e0b", "allocation": 80 },
+      { "employeeId": "emp003", "name": "Sneha Kapoor", "role": "UX Designer",  "avatar": "SK", "photo": "https://randomuser.me/api/portraits/women/26.jpg",  "color": "#ec4899", "allocation": 30 },
+      { "employeeId": "emp009", "name": "Divya Reddy",  "role": "Brand Comms",  "avatar": "DR", "photo": "https://randomuser.me/api/portraits/women/17.jpg",  "color": "#a855f7", "allocation": 40 }
+    ],
+    "milestones": [
+      { "title": "Discovery & Research",  "done": true,  "date": "2026-02-10" },
+      { "title": "Logo Concepts",         "done": true,  "date": "2026-03-01" },
+      { "title": "Brand Guidelines Doc",  "done": false, "date": "2026-04-01" },
+      { "title": "Rollout to all assets", "done": false, "date": "2026-04-30" }
+    ],
+    "tags": ["Figma", "Adobe CC", "Brand Strategy"]
+  },
+  {
+    "id": "proj004",
+    "name": "B2B SaaS Product Launch",
+    "description": "Go-to-market strategy and execution for the new enterprise B2B product. Includes marketing campaigns, sales enablement, and customer onboarding flows.",
+    "status": "active",
+    "priority": "high",
+    "category": "Product",
+    "color": "#3b82f6",
+    "icon": "🚀",
+    "startDate": "2025-10-01",
+    "endDate": "2026-03-31",
+    "progress": 91,
+    "teamLead": "emp006",
+    "members": [
+      { "employeeId": "emp006", "name": "Vikram Singh",  "role": "Product Lead",   "avatar": "VS", "photo": "https://randomuser.me/api/portraits/men/55.jpg",    "color": "#3b82f6", "allocation": 70 },
+      { "employeeId": "emp009", "name": "Divya Reddy",   "role": "Marketing Lead", "avatar": "DR", "photo": "https://randomuser.me/api/portraits/women/17.jpg",  "color": "#a855f7", "allocation": 60 },
+      { "employeeId": "emp003", "name": "Sneha Kapoor",  "role": "UX Designer",    "avatar": "SK", "photo": "https://randomuser.me/api/portraits/women/26.jpg",  "color": "#ec4899", "allocation": 20 }
+    ],
+    "milestones": [
+      { "title": "Product Beta",         "done": true,  "date": "2025-12-15" },
+      { "title": "Sales Deck Ready",     "done": true,  "date": "2026-01-10" },
+      { "title": "First 5 Enterprise Clients", "done": true,  "date": "2026-02-28" },
+      { "title": "Public Launch",        "done": false, "date": "2026-03-31" }
+    ],
+    "tags": ["Go-to-Market", "B2B", "SaaS", "Enterprise"]
+  },
+  {
+    "id": "proj005",
+    "name": "Infrastructure Modernization",
+    "description": "Migrating legacy monolith to Kubernetes-based microservices on AWS. Includes zero-downtime deployments, automated scaling, and 99.99% SLA.",
+    "status": "on-hold",
+    "priority": "medium",
+    "category": "Engineering",
+    "color": "#14b8a6",
+    "icon": "🛡️",
+    "startDate": "2026-02-01",
+    "endDate": "2026-08-31",
+    "progress": 25,
+    "teamLead": "emp008",
+    "members": [
+      { "employeeId": "emp008", "name": "Karan Malhotra", "role": "DevOps Lead",      "avatar": "KM", "photo": "https://randomuser.me/api/portraits/men/22.jpg",    "color": "#14b8a6", "allocation": 100 },
+      { "employeeId": "emp010", "name": "Rahul Joshi",    "role": "Backend Engineer", "avatar": "RJ", "photo": "https://randomuser.me/api/portraits/men/18.jpg",    "color": "#ef4444", "allocation": 80 },
+      { "employeeId": "emp002", "name": "Priya Menon",    "role": "Engineering Mgr",  "avatar": "PM", "photo": "https://randomuser.me/api/portraits/women/44.jpg",  "color": "#8b5cf6", "allocation": 20 }
+    ],
+    "milestones": [
+      { "title": "Architecture Design",   "done": true,  "date": "2026-02-15" },
+      { "title": "Dev Environment Setup", "done": false, "date": "2026-04-01" },
+      { "title": "Staging Migration",     "done": false, "date": "2026-06-01" },
+      { "title": "Production Cutover",    "done": false, "date": "2026-08-31" }
+    ],
+    "tags": ["Kubernetes", "AWS", "Docker", "Terraform"]
+  },
+  {
+    "id": "proj006",
+    "name": "Employee Wellness Initiative",
+    "description": "Designing and rolling out a company-wide wellness program including mental health support, fitness benefits, and flexible work policies.",
+    "status": "completed",
+    "priority": "medium",
+    "category": "HR",
+    "color": "#f97316",
+    "icon": "❤️",
+    "startDate": "2025-09-01",
+    "endDate": "2026-02-28",
+    "progress": 100,
+    "teamLead": "emp007",
+    "members": [
+      { "employeeId": "emp007", "name": "Meera Nair",   "role": "Program Lead", "avatar": "MN", "photo": "https://randomuser.me/api/portraits/women/33.jpg",  "color": "#f97316", "allocation": 90 },
+      { "employeeId": "emp006", "name": "Vikram Singh", "role": "Sponsor",      "avatar": "VS", "photo": "https://randomuser.me/api/portraits/men/55.jpg",    "color": "#3b82f6", "allocation": 10 }
+    ],
+    "milestones": [
+      { "title": "Needs Assessment",    "done": true, "date": "2025-09-30" },
+      { "title": "Vendor Onboarding",  "done": true, "date": "2025-11-01" },
+      { "title": "Program Launch",     "done": true, "date": "2025-12-01" },
+      { "title": "First Pulse Survey", "done": true, "date": "2026-02-28" }
+    ],
+    "tags": ["Wellness", "Culture", "Mental Health", "Benefits"]
+  }
+]

@@ -11,6 +11,9 @@ const kudosRouter = require('./routes/kudos');
 const feedbackRouter = require('./routes/feedback');
 const leavesRouter = require('./routes/leaves');
 const analyticsRouter = require('./routes/analytics');
+const pulseRouter = require('./routes/pulse');
+const projectsRouter = require('./routes/projects');
+const journeysRouter = require('./routes/journeys');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,12 +30,15 @@ app.use('/api/kudos', kudosRouter);
 app.use('/api/feedback', feedbackRouter);
 app.use('/api/leaves', leavesRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/api/pulse', pulseRouter);
+app.use('/api/projects', projectsRouter);
+app.use('/api/journeys', journeysRouter);
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Next-Gen HR Portal API is running', timestamp: new Date().toISOString() });
+  res.json({ status: 'OK', message: 'OfficeVerse API is running', timestamp: new Date().toISOString() });
 });
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 Next-Gen HR Portal Backend running on http://localhost:${PORT}`);
+  console.log(`\n🌌 OfficeVerse Backend running on http://localhost:${PORT}`);
   console.log(`📊 API Health: http://localhost:${PORT}/api/health\n`);
 });

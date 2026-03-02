@@ -1,0 +1,132 @@
+[
+  {
+    "employeeId": "emp001",
+    "employeeName": "Arjun Sharma",
+    "avatar": "AS",
+    "photo": "https://randomuser.me/api/portraits/men/32.jpg",
+    "coverColor": "#6366f1",
+    "role": "Senior Software Engineer",
+    "department": "Engineering",
+    "joinDate": "2021-03-15",
+    "story": "From a curious coder to an architecture champion — Arjun's journey at OfficeVerse has been nothing short of extraordinary.",
+    "events": [
+      {
+        "id": "ev001",
+        "type": "joined",
+        "date": "2021-03-15",
+        "title": "Joined OfficeVerse 🎉",
+        "description": "Arjun walked through the doors as a Software Engineer, ready to build the future. His first PR was merged within 3 days.",
+        "icon": "🚀",
+        "color": "#6366f1",
+        "highlight": true
+      },
+      {
+        "id": "ev002",
+        "type": "skill",
+        "date": "2021-06-10",
+        "title": "Mastered AWS Cloud Architecture",
+        "description": "Earned the AWS Solutions Architect certification, unlocking cloud-native development skills for the whole team.",
+        "icon": "☁️",
+        "color": "#3b82f6",
+        "badge": "AWS Certified"
+      },
+      {
+        "id": "ev003",
+        "type": "milestone",
+        "date": "2021-12-01",
+        "title": "Led First Major Feature",
+        "description": "Independently architected and shipped the real-time notification system used by 10,000+ users daily.",
+        "icon": "⭐",
+        "color": "#f59e0b"
+      },
+      {
+        "id": "ev004",
+        "type": "anniversary",
+        "date": "2022-03-15",
+        "title": "One Year Anniversary 🎊",
+        "description": "A whole year of impact! The team surprised Arjun with a cake and a heartfelt note about how much his work meant to everyone.",
+        "icon": "🎂",
+        "color": "#ec4899",
+        "highlight": true
+      },
+      {
+        "id": "ev005",
+        "type": "skill",
+        "date": "2022-07-20",
+        "title": "Open Source Contributor",
+        "description": "Contributed to a React library with 50K+ stars on GitHub, putting OfficeVerse on the open-source map.",
+        "icon": "🌟",
+        "color": "#10b981",
+        "badge": "Open Source"
+      },
+      {
+        "id": "ev006",
+        "type": "award",
+        "date": "2022-12-15",
+        "title": "Innovation Award Winner 🏆",
+        "description": "Recognized company-wide for building a developer tool that cut release cycles by 40%.",
+        "icon": "🏆",
+        "color": "#f59e0b",
+        "highlight": true
+      },
+      {
+        "id": "ev007",
+        "type": "promotion",
+        "date": "2024-02-01",
+        "title": "Promoted to Senior Engineer 🚀",
+        "description": "After consistently going above and beyond, Arjun was promoted to Senior Software Engineer — a moment the whole team had been cheering for.",
+        "icon": "📈",
+        "color": "#10b981",
+        "highlight": true,
+        "badge": "Promoted"
+      },
+      {
+        "id": "ev008",
+        "type": "milestone",
+        "date": "2025-12-20",
+        "title": "Innovation Champion of Q4 2025",
+        "description": "Led the microservices migration that reduced system latency by 40% and deployment frequency 3x. A true engineering landmark.",
+        "icon": "💎",
+        "color": "#6366f1"
+      }
+    ]
+  },
+  {
+    "employeeId": "emp002",
+    "employeeName": "Priya Menon",
+    "avatar": "PM",
+    "photo": "https://randomuser.me/api/portraits/women/44.jpg",
+    "coverColor": "#8b5cf6",
+    "role": "Engineering Manager",
+    "department": "Engineering",
+    "joinDate": "2019-08-01",
+    "story": "Priya didn't just grow as an engineer — she grew as a leader, a mentor, and the heart of the Engineering team.",
+    "events": [
+      { "id": "ev101", "type": "joined", "date": "2019-08-01", "title": "Day One as a Developer", "description": "Priya joined as a backend engineer with a reputation for clean code and thoughtful design.", "icon": "🚀", "color": "#8b5cf6", "highlight": true },
+      { "id": "ev102", "type": "milestone", "date": "2020-03-10", "title": "Led Backend API Overhaul", "description": "Single-handedly rewrote the company's core API, cutting response times by 60%.", "icon": "⚡", "color": "#f59e0b" },
+      { "id": "ev103", "type": "anniversary", "date": "2020-08-01", "title": "One Year ✨", "description": "A year of building, learning, and laughing. The team gifted her a custom keyboard — she still uses it.", "icon": "🎊", "color": "#ec4899", "highlight": true },
+      { "id": "ev104", "type": "promotion", "date": "2021-01-15", "title": "Promoted to Tech Lead", "description": "Priya's natural leadership finally had a title to match. She started leading a team of 8 engineers.", "icon": "📈", "color": "#10b981", "highlight": true, "badge": "Tech Lead" },
+      { "id": "ev105", "type": "skill", "date": "2021-06-01", "title": "Completed Leadership Certification", "description": "Invested in her own growth with a leadership and management program — she brought back frameworks the whole company now uses.", "icon": "📚", "color": "#3b82f6", "badge": "Certified Leader" },
+      { "id": "ev106", "type": "promotion", "date": "2022-09-01", "title": "Promoted to Engineering Manager 🎉", "description": "From engineer to manager of 25. Priya's team has the highest satisfaction score in the company: 4.8/5.", "icon": "🌟", "color": "#8b5cf6", "highlight": true, "badge": "Manager" },
+      { "id": "ev107", "type": "award", "date": "2024-12-31", "title": "Best Manager of the Year 2024", "description": "Voted by peers and reports alike. The citation read: 'She makes everyone feel seen, heard, and valued.'", "icon": "🏆", "color": "#f59e0b", "highlight": true }
+    ]
+  },
+  {
+    "employeeId": "emp007",
+    "employeeName": "Meera Nair",
+    "avatar": "MN",
+    "photo": "https://randomuser.me/api/portraits/women/33.jpg",
+    "coverColor": "#f97316",
+    "role": "HR Business Partner",
+    "department": "Human Resources",
+    "joinDate": "2020-04-01",
+    "story": "Meera joined to build a better workplace — and she's done exactly that, one program, one person, one initiative at a time.",
+    "events": [
+      { "id": "ev201", "type": "joined", "date": "2020-04-01", "title": "Culture Builder Arrives 🌱", "description": "Meera joined during the pandemic, working remotely — and still managed to make every new joiner feel welcome with virtual onboarding kits.", "icon": "🌱", "color": "#f97316", "highlight": true },
+      { "id": "ev202", "type": "milestone", "date": "2020-09-15", "title": "Redesigned Onboarding Experience", "description": "Cut new-joiner time-to-productivity by 30% with a redesigned onboarding program. First batch rated it 4.9/5.", "icon": "✨", "color": "#10b981" },
+      { "id": "ev203", "type": "skill", "date": "2021-03-01", "title": "SHRM-CP Certification", "description": "Earned the global HR certification, strengthening her expertise in people strategy and employment law.", "icon": "📜", "color": "#3b82f6", "badge": "SHRM-CP" },
+      { "id": "ev204", "type": "anniversary", "date": "2022-04-01", "title": "Two Years of People Magic 💫", "description": "Two years, 50+ hires, 12 new programs. Meera's impact was celebrated with a team message wall of gratitude.", "icon": "💫", "color": "#ec4899", "highlight": true },
+      { "id": "ev205", "type": "award", "date": "2025-11-28", "title": "Culture Catalyst Award ❤️", "description": "Boosted company satisfaction from 3.8 to 4.6 in 8 months. The award came with a standing ovation at the all-hands.", "icon": "❤️", "color": "#ef4444", "highlight": true }
+    ]
+  }
+]

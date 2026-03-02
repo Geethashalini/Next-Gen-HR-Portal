@@ -66,4 +66,19 @@ export const analyticsAPI = {
   get: () => api.get('/analytics'),
 };
 
+export const pulseAPI = {
+  get: () => api.get('/pulse'),
+  checkin: (data) => api.post('/pulse/checkin', data),
+};
+
+export const projectsAPI = {
+  getAll: (params) => api.get('/projects', { params }),
+  getById: (id) => api.get(`/projects/${id}`),
+};
+
+export const journeysAPI = {
+  getAll: () => api.get('/journeys'),
+  getByEmployee: (id) => api.get(`/journeys/${id}`),
+};
+
 export default api;

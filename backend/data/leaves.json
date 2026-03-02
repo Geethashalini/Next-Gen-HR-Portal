@@ -1,5 +1,18 @@
 [
   {
+    "id": "lv6cf874",
+    "type": "Casual Leave",
+    "from": "2026-04-03",
+    "to": "2026-04-03",
+    "reason": "personal work",
+    "employeeName": "Arjun Sharma",
+    "employeeId": "emp001",
+    "days": 1,
+    "appliedOn": "2026-03-02",
+    "status": "pending",
+    "approvedBy": null
+  },
+  {
     "id": "lv001",
     "employeeId": "emp001",
     "employeeName": "Arjun Sharma",

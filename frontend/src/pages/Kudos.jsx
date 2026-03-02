@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Heart, Trophy, Plus, X, Send, Star } from 'lucide-react';
+import { Heart, Plus, X, Send, Trophy, Sparkles, Crown } from 'lucide-react';
+import Avatar from '../components/common/Avatar';
+import PageLoader from '../components/common/PageLoader';
 import { kudosAPI, employeesAPI } from '../services/api';
-import { format, parseISO, formatDistanceToNow } from 'date-fns';
+import { useLocation } from 'react-router-dom';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import toast from 'react-hot-toast';
 
 const BADGES = [
-  { label: '🦸 Hero', value: '🦸 Hero', color: '#f59e0b' },
-  { label: '🚀 Innovator', value: '🚀 Innovator', color: '#6366f1' },
-  { label: '⭐ Star', value: '⭐ Star', color: '#ec4899' },
-  { label: '🌟 Mentor', value: '🌟 Mentor', color: '#8b5cf6' },
-  { label: '💡 Insights', value: '💡 Insights', color: '#10b981' },
-  { label: '❤️ Culture', value: '❤️ Culture', color: '#ef4444' },
-  { label: '🎯 Impact', value: '🎯 Impact', color: '#a855f7' },
-  { label: '⚡ Rising Star', value: '⚡ Rising Star', color: '#f59e0b' },
+  { label: '🦸 Hero',        value: '🦸 Hero',        color: '#f59e0b' },
+  { label: '🚀 Innovator',   value: '🚀 Innovator',   color: '#6366f1' },
+  { label: '⭐ Star',         value: '⭐ Star',         color: '#ec4899' },
+  { label: '🌟 Mentor',      value: '🌟 Mentor',      color: '#8b5cf6' },
+  { label: '💡 Insights',    value: '💡 Insights',    color: '#10b981' },
+  { label: '❤️ Culture',     value: '❤️ Culture',     color: '#ef4444' },
+  { label: '🎯 Impact',      value: '🎯 Impact',       color: '#a855f7' },
+  { label: '⚡ Rising Star', value: '⚡ Rising Star',  color: '#fbbf24' },
 ];
+const CATEGORIES = ['Problem Solving','Innovation','Excellence','Business Impact','Culture Building','Mentorship','Growth','Teamwork'];
 
-const CATEGORIES = ['Problem Solving', 'Innovation', 'Excellence', 'Business Impact', 'Culture Building', 'Mentorship', 'Growth', 'Teamwork'];
-
-function KudoCard({ kudo }) {
+function KudoCard({ kudo, index }) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(kudo.likes);
 
@@ -27,127 +29,98 @@ function KudoCard({ kudo }) {
       const res = await kudosAPI.like(kudo.id);
       setLikes(res.likes);
       setLiked(true);
-    } catch {
-      toast.error('Failed to like');
-    }
+    } catch { toast.error('Failed'); }
   };
 
   return (
-    <div className="glass-card p-5 hover:border-white/15 transition-all duration-300">
-      <div className="flex items-start gap-3 mb-3">
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-          style={{ background: kudo.fromColor }}
-        >
-          {kudo.fromAvatar}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 text-sm flex-wrap">
-            <span className="text-white font-semibold">{kudo.fromName}</span>
-            <span className="text-white/30">→</span>
-            <span className="text-white font-semibold">{kudo.toName}</span>
+    <div className="glass-card p-5 animate-slide-up group"
+      style={{
+        animationDelay: `${index * 50}ms`,
+        transition: 'all 0.3s ease',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.4)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2 min-w-0">
+          <Avatar photo={kudo.fromPhoto} initials={kudo.fromAvatar} color={kudo.fromColor} size="sm" shape="circle" />
+          <div className="min-w-0">
+            <p className="text-xs text-white/40">
+              <span className="text-white/80 font-bold">{kudo.fromName}</span>
+              <span className="mx-1">→</span>
+              <span className="text-white/80 font-bold">{kudo.toName}</span>
+            </p>
+            <p className="text-white/25 text-xs">{formatDistanceToNow(parseISO(kudo.date), { addSuffix: true })}</p>
           </div>
-          <p className="text-white/30 text-xs mt-0.5">
-            {formatDistanceToNow(parseISO(kudo.date), { addSuffix: true })}
-          </p>
         </div>
-        <div className="flex-shrink-0 text-right">
-          <span
-            className="badge text-xs px-2.5 py-1 font-semibold"
-            style={{ background: `${kudo.badgeColor}20`, color: kudo.badgeColor, border: `1px solid ${kudo.badgeColor}30` }}
-          >
-            {kudo.badge}
-          </span>
-        </div>
+        <span className="badge flex-shrink-0 text-xs font-bold px-3 py-1"
+          style={{ background: `${kudo.badgeColor}18`, color: kudo.badgeColor, border: `1px solid ${kudo.badgeColor}30` }}>
+          {kudo.badge}
+        </span>
       </div>
 
-      <div className="bg-white/3 rounded-xl p-3 border border-white/5">
-        <p className="text-white/70 text-sm leading-relaxed italic">"{kudo.message}"</p>
+      {/* Message */}
+      <div className="px-4 py-3 rounded-xl mb-3"
+        style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <p className="text-white/60 text-sm leading-relaxed italic">"{kudo.message}"</p>
       </div>
 
-      <div className="flex items-center justify-between mt-3">
-        <span className="badge bg-white/5 text-white/30 border border-white/8 text-xs">{kudo.category}</span>
-        <div className="flex items-center gap-3">
-          <span className="text-primary-400 text-xs font-medium">+{kudo.points} pts</span>
-          <button
-            onClick={handleLike}
-            className={`flex items-center gap-1 text-sm transition-all ${
-              liked ? 'text-pink-400' : 'text-white/30 hover:text-pink-400'
-            }`}
-          >
-            <Heart size={14} className={liked ? 'fill-current' : ''} />
-            <span>{likes}</span>
-          </button>
+      {/* Footer */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="tag">{kudo.category}</span>
+          <span className="text-xs font-bold" style={{ color: '#a5b4fc' }}>+{kudo.points} pts</span>
         </div>
+        <button onClick={handleLike}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
+          style={liked
+            ? { background: 'rgba(244,63,94,0.18)', color: '#f87171', border: '1px solid rgba(244,63,94,0.3)' }
+            : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.07)' }
+          }
+        >
+          <Heart size={12} className={liked ? 'fill-current' : ''} /> {likes}
+        </button>
       </div>
     </div>
   );
 }
 
 function GiveKudosModal({ employees, onClose, onSubmit }) {
-  const [form, setForm] = useState({
-    toId: '',
-    message: '',
-    badge: '',
-    badgeColor: '',
-    category: '',
-    points: 100,
-  });
-
-  const selectedEmployee = employees.find(e => e.id === form.toId);
-  const selectedBadge = BADGES.find(b => b.value === form.badge);
+  const [form, setForm] = useState({ toId: '', message: '', badge: '', badgeColor: '', category: '', points: 100 });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.toId || !form.message || !form.badge || !form.category) {
-      toast.error('Please fill in all required fields');
-      return;
+      toast.error('Fill in all required fields'); return;
     }
-    const selectedEmp = employees.find(e => e.id === form.toId);
-    try {
-      await onSubmit({
-        fromId: 'emp001',
-        fromName: 'Arjun Sharma',
-        fromAvatar: 'AS',
-        fromColor: '#6366f1',
-        toId: selectedEmp.id,
-        toName: selectedEmp.name,
-        toAvatar: selectedEmp.avatar,
-        toColor: selectedEmp.coverColor,
-        message: form.message,
-        badge: form.badge,
-        badgeColor: form.badgeColor,
-        category: form.category,
-        points: form.points,
-      });
-    } catch {
-      toast.error('Failed to send kudos');
-    }
+    const emp = employees.find(e => e.id === form.toId);
+    await onSubmit({ fromId: 'emp001', fromName: 'Arjun Sharma', fromAvatar: 'AS', fromColor: '#6366f1',
+      toId: emp.id, toName: emp.name, toAvatar: emp.avatar, toColor: emp.coverColor,
+      message: form.message, badge: form.badge, badgeColor: form.badgeColor, category: form.category, points: form.points });
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="glass-card max-w-lg w-full animate-slide-up max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)' }}>
+      <div className="glass-card max-w-lg w-full animate-scale-in max-h-[90vh] overflow-y-auto"
+        style={{ border: '1px solid rgba(236,72,153,0.2)', boxShadow: '0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(236,72,153,0.1)' }}>
         <div className="flex items-center justify-between p-5 border-b border-white/5">
           <div className="flex items-center gap-2">
-            <Heart size={18} className="text-pink-400" />
-            <h2 className="text-white font-bold">Give Kudos</h2>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'rgba(244,63,94,0.15)' }}>
+              <Heart size={16} style={{ color: '#f472b6' }} />
+            </div>
+            <h2 className="text-white font-black">Give Kudos</h2>
           </div>
-          <button onClick={onClose} className="text-white/40 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors">
-            <X size={20} />
+          <button onClick={onClose} className="p-1.5 rounded-xl text-white/30 hover:text-white hover:bg-white/8 transition-all">
+            <X size={18} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-5 space-y-5">
           <div>
-            <label className="text-white/60 text-sm font-medium mb-2 block">Recognize *</label>
-            <select
-              value={form.toId}
-              onChange={e => setForm(f => ({ ...f, toId: e.target.value }))}
-              className="input-field"
-              required
-            >
-              <option value="" disabled>Select a colleague...</option>
+            <label className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2 block">Recognize *</label>
+            <select value={form.toId} onChange={e => setForm(f => ({ ...f, toId: e.target.value }))} className="input-field" required>
+              <option value="">Select a colleague…</option>
               {employees.filter(e => e.id !== 'emp001').map(e => (
                 <option key={e.id} value={e.id}>{e.name} — {e.role}</option>
               ))}
@@ -155,23 +128,16 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
           </div>
 
           <div>
-            <label className="text-white/60 text-sm font-medium mb-2 block">Badge *</label>
+            <label className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2 block">Badge *</label>
             <div className="grid grid-cols-2 gap-2">
               {BADGES.map(badge => (
-                <button
-                  key={badge.value}
-                  type="button"
+                <button key={badge.value} type="button"
                   onClick={() => setForm(f => ({ ...f, badge: badge.value, badgeColor: badge.color }))}
-                  className={`px-3 py-2 rounded-xl text-sm font-medium transition-all border text-left ${
-                    form.badge === badge.value
-                      ? 'border-opacity-50 bg-opacity-20'
-                      : 'border-white/8 bg-white/3 text-white/60 hover:bg-white/6'
-                  }`}
-                  style={form.badge === badge.value ? {
-                    background: `${badge.color}20`,
-                    borderColor: `${badge.color}50`,
-                    color: badge.color
-                  } : {}}
+                  className="px-3 py-2 rounded-xl text-sm font-semibold text-left transition-all duration-200"
+                  style={form.badge === badge.value
+                    ? { background: `${badge.color}20`, border: `1px solid ${badge.color}40`, color: badge.color }
+                    : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)' }
+                  }
                 >
                   {badge.label}
                 </button>
@@ -180,18 +146,16 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
           </div>
 
           <div>
-            <label className="text-white/60 text-sm font-medium mb-2 block">Category *</label>
+            <label className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2 block">Category *</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map(cat => (
-                <button
-                  key={cat}
-                  type="button"
+                <button key={cat} type="button"
                   onClick={() => setForm(f => ({ ...f, category: cat }))}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    form.category === cat
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-white/5 text-white/50 hover:bg-white/10 border border-white/5'
-                  }`}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
+                  style={form.category === cat
+                    ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', boxShadow: '0 4px 16px rgba(99,102,241,0.35)' }
+                    : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)' }
+                  }
                 >
                   {cat}
                 </button>
@@ -200,30 +164,21 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
           </div>
 
           <div>
-            <label className="text-white/60 text-sm font-medium mb-2 block">Your message *</label>
-            <textarea
-              value={form.message}
-              onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-              placeholder="Tell them why they're awesome..."
-              rows={4}
-              className="input-field resize-none"
-              required
-            />
+            <label className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2 block">Your Message *</label>
+            <textarea value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+              placeholder="Tell them why they're amazing…" rows={4} className="input-field resize-none" required />
           </div>
 
           <div>
-            <label className="text-white/60 text-sm font-medium mb-2 block">Points</label>
+            <label className="text-white/50 text-xs font-bold uppercase tracking-wider mb-2 block">Points</label>
             <div className="flex gap-2">
               {[50, 75, 100, 150].map(pts => (
-                <button
-                  key={pts}
-                  type="button"
-                  onClick={() => setForm(f => ({ ...f, points: pts }))}
-                  className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    form.points === pts
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-white/5 text-white/50 hover:bg-white/10 border border-white/5'
-                  }`}
+                <button key={pts} type="button" onClick={() => setForm(f => ({ ...f, points: pts }))}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-black transition-all"
+                  style={form.points === pts
+                    ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }
+                    : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)' }
+                  }
                 >
                   +{pts}
                 </button>
@@ -231,13 +186,9 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
             </div>
           </div>
 
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">
-              Cancel
-            </button>
-            <button type="submit" className="btn-primary flex-1 justify-center">
-              <Send size={16} /> Send Kudos
-            </button>
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1 justify-center">Cancel</button>
+            <button type="submit" className="btn-primary flex-1 justify-center"><Send size={15} /> Send Kudos</button>
           </div>
         </form>
       </div>
@@ -251,23 +202,18 @@ export default function Kudos() {
   const [employees, setEmployees] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const filterTo = location.state?.filterTo;
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [kudosData, leaderData, empData] = await Promise.all([
-        kudosAPI.getAll(),
-        kudosAPI.getLeaderboard(),
-        employeesAPI.getAll(),
-      ]);
-      setKudos(kudosData);
-      setLeaderboard(leaderData);
-      setEmployees(empData);
-    } catch {
-      toast.error('Failed to load kudos');
-    } finally {
-      setLoading(false);
-    }
+      const params = filterTo ? { employeeId: filterTo } : {};
+      const [k, l, e] = await Promise.all([kudosAPI.getAll(params), kudosAPI.getLeaderboard(), employeesAPI.getAll()]);
+      const filtered = filterTo ? k.filter(kd => kd.toId === filterTo) : k;
+      setKudos(filtered); setLeaderboard(l); setEmployees(e);
+    } catch { toast.error('Failed to load'); }
+    finally { setLoading(false); }
   };
 
   useEffect(() => { fetchData(); }, []);
@@ -279,57 +225,72 @@ export default function Kudos() {
     fetchData();
   };
 
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals = ['🥇','🥈','🥉'];
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="flex items-center justify-between">
+    <div className="space-y-7 animate-fade-in">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="section-title flex items-center gap-2">
-            <Heart size={24} className="text-pink-400" />
-            Kudos Wall
+          <h1 className="section-title flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, rgba(244,63,94,0.2), rgba(236,72,153,0.1))', boxShadow: '0 4px 16px rgba(244,63,94,0.2)' }}>
+              <Heart size={20} style={{ color: '#f472b6' }} />
+            </div>
+            <span style={{ background: 'linear-gradient(135deg, #f472b6, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Kudos Wall
+            </span>
           </h1>
-          <p className="text-white/40 text-sm mt-1">Spread appreciation. Recognize greatness.</p>
+          <p className="text-white/35 text-sm mt-2 ml-14">
+          {filterTo ? '❤️ Kudos received by Arjun Sharma' : 'Spread appreciation. Recognize greatness.'}
+        </p>
         </div>
         <button onClick={() => setShowModal(true)} className="btn-primary">
-          <Plus size={18} /> Give Kudos
+          <Plus size={16} /> Give Kudos
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Kudos Feed */}
+        {/* Feed */}
         <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider">Recent Appreciations</h2>
-          {loading ? (
-            <div className="flex justify-center py-16">
-              <div className="w-10 h-10 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
+          <p className="text-white/30 text-xs font-bold uppercase tracking-widest">Recent Appreciations</p>
+          <PageLoader loading={loading} minHeight="150px">
+            <div className="space-y-4">
+              {kudos.map((k, i) => <KudoCard key={k.id} kudo={k} index={i} />)}
             </div>
-          ) : (
-            kudos.map(kudo => <KudoCard key={kudo.id} kudo={kudo} />)
-          )}
+          </PageLoader>
         </div>
 
         {/* Leaderboard */}
         <div>
-          <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">Recognition Leaderboard</h2>
-          <div className="glass-card p-5">
-            <div className="space-y-3">
+          <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-4">Recognition Leaderboard</p>
+          <div className="glass-card p-5" style={{ border: '1px solid rgba(245,158,11,0.1)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <Crown size={16} style={{ color: '#fbbf24' }} />
+              <span className="text-white/60 text-sm font-bold">Top Recognized</span>
+            </div>
+            <div className="space-y-2.5">
               {leaderboard.map((person, idx) => (
-                <div key={person.id} className={`flex items-center gap-3 p-3 rounded-xl transition-all ${idx === 0 ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-white/3'}`}>
-                  <span className="text-xl w-7 text-center flex-shrink-0">
-                    {medals[idx] || `${idx + 1}`}
-                  </span>
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                    style={{ background: person.color }}
-                  >
-                    {person.avatar}
-                  </div>
+                <div key={person.id}
+                  className="flex items-center gap-3 p-3 rounded-xl transition-all"
+                  style={idx === 0
+                    ? { background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)' }
+                    : { background: 'rgba(255,255,255,0.025)' }
+                  }
+                >
+                  <span className="text-lg w-7 text-center flex-shrink-0">{medals[idx] || `${idx+1}`}</span>
+                  <Avatar photo={person.photo} initials={person.avatar} color={person.color} size="sm" shape="circle" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-white/80 text-sm font-medium truncate">{person.name}</p>
-                    <p className="text-white/30 text-xs">{person.kudosReceived} kudos</p>
+                    <p className="text-white/80 text-sm font-semibold truncate">{person.name}</p>
+                    <div className="w-full rounded-full h-1 mt-1.5" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                      <div className="h-1 rounded-full transition-all" style={{
+                        width: `${(person.points / (leaderboard[0]?.points || 1)) * 100}%`,
+                        background: idx === 0 ? 'linear-gradient(90deg, #f59e0b, #fb923c)' : 'rgba(99,102,241,0.6)'
+                      }} />
+                    </div>
                   </div>
-                  <span className="text-primary-400 text-sm font-bold">{person.points}</span>
+                  <span className="font-black text-sm flex-shrink-0" style={{ color: idx === 0 ? '#fbbf24' : '#a5b4fc' }}>
+                    {person.points}
+                  </span>
                 </div>
               ))}
             </div>
@@ -337,13 +298,7 @@ export default function Kudos() {
         </div>
       </div>
 
-      {showModal && (
-        <GiveKudosModal
-          employees={employees}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmit}
-        />
-      )}
+      {showModal && <GiveKudosModal employees={employees} onClose={() => setShowModal(false)} onSubmit={handleSubmit} />}
     </div>
   );
 }

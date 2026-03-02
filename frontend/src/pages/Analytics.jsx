@@ -1,5 +1,19 @@
 import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, Users, Trophy, Heart, Megaphone } from 'lucide-react';
+import Avatar from '../components/common/Avatar';
+
+const empPhotos = {
+  emp001: 'https://randomuser.me/api/portraits/men/32.jpg',
+  emp002: 'https://randomuser.me/api/portraits/women/44.jpg',
+  emp003: 'https://randomuser.me/api/portraits/women/26.jpg',
+  emp004: 'https://randomuser.me/api/portraits/men/41.jpg',
+  emp005: 'https://randomuser.me/api/portraits/women/54.jpg',
+  emp006: 'https://randomuser.me/api/portraits/men/55.jpg',
+  emp007: 'https://randomuser.me/api/portraits/women/33.jpg',
+  emp008: 'https://randomuser.me/api/portraits/men/22.jpg',
+  emp009: 'https://randomuser.me/api/portraits/women/17.jpg',
+  emp010: 'https://randomuser.me/api/portraits/men/18.jpg',
+};
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, Legend
@@ -179,12 +193,7 @@ export default function Analytics() {
             {data.topRecognized.map((person, idx) => (
               <div key={person.name} className={`flex items-center gap-3 p-3 rounded-xl ${idx === 0 ? 'bg-amber-500/10 border border-amber-500/15' : 'bg-white/3'}`}>
                 <span className="text-lg w-7 text-center">{medals[idx] || (idx + 1)}</span>
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                  style={{ background: person.color }}
-                >
-                  {person.avatar}
-                </div>
+                <Avatar photo={empPhotos[person.id]} initials={person.avatar} color={person.color} size="sm" shape="circle" />
                 <div className="flex-1 min-w-0">
                   <p className="text-white/80 text-sm font-medium truncate">{person.name}</p>
                   <div className="w-full bg-white/5 rounded-full h-1 mt-1.5">

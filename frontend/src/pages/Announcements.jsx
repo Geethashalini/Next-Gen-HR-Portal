@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Megaphone, Heart, Pin, Eye, Filter, Plus, X } from 'lucide-react';
+import Avatar from '../components/common/Avatar';
+import PageLoader from '../components/common/PageLoader';
+
+const authorPhotos = {
+  MN: 'https://randomuser.me/api/portraits/women/33.jpg',
+  AT: 'https://randomuser.me/api/portraits/men/75.jpg',
+  CE: 'https://randomuser.me/api/portraits/men/68.jpg',
+  HL: 'https://randomuser.me/api/portraits/women/62.jpg',
+  IT: 'https://randomuser.me/api/portraits/men/45.jpg',
+};
 import { announcementsAPI } from '../services/api';
 import { format, parseISO, formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -47,12 +57,13 @@ function AnnouncementCard({ announcement, onLike }) {
       <div className="p-5">
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex items-start gap-3">
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-              style={{ background: announcement.authorColor }}
-            >
-              {announcement.authorAvatar}
-            </div>
+            <Avatar
+              photo={authorPhotos[announcement.authorAvatar]}
+              initials={announcement.authorAvatar}
+              color={announcement.authorColor}
+              size="md"
+              shape="circle"
+            />
             <div>
               <p className="text-white/80 text-sm font-medium">{announcement.author}</p>
               <p className="text-white/40 text-xs">{announcement.authorRole}</p>
@@ -184,7 +195,7 @@ export default function Announcements() {
             </button>
           ))}
         </div>
-        <div className="flex gap-2 ml-auto">
+        <div className="flex gap-2 flex-wrap">
           {['all', 'high', 'medium', 'low'].map(p => (
             <button
               key={p}
@@ -201,11 +212,7 @@ export default function Announcements() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-16">
-          <div className="w-10 h-10 rounded-full border-2 border-primary-500 border-t-transparent animate-spin"></div>
-        </div>
-      ) : (
+      <PageLoader loading={loading}>
         <div className="space-y-6">
           {pinned.length > 0 && (
             <div>
@@ -217,7 +224,6 @@ export default function Announcements() {
               </div>
             </div>
           )}
-
           {regular.length > 0 && (
             <div>
               {pinned.length > 0 && (
@@ -228,15 +234,14 @@ export default function Announcements() {
               </div>
             </div>
           )}
-
-          {announcements.length === 0 && (
+          {!loading && announcements.length === 0 && (
             <div className="text-center py-16">
               <Megaphone size={40} className="text-white/15 mx-auto mb-3" />
               <p className="text-white/30">No announcements found.</p>
             </div>
           )}
         </div>
-      )}
+      </PageLoader>
     </div>
   );
 }
