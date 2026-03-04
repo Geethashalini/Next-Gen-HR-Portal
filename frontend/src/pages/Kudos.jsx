@@ -218,6 +218,14 @@ export default function Kudos() {
 
   useEffect(() => { fetchData(); }, []);
 
+  useEffect(() => {
+    if (location.state?.openModal) {
+      setShowModal(true);
+      // Clear the state so refreshing the page doesn't re-open it
+      window.history.replaceState({}, '');
+    }
+  }, [location.state]);
+
   const handleSubmit = async (data) => {
     await kudosAPI.create(data);
     toast.success('🎉 Kudos sent!');

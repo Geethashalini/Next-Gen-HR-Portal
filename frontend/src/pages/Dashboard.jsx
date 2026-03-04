@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, useInView } from 'framer-motion';
 import {
   Trophy, PartyPopper, Megaphone, Heart, Users, TrendingUp,
@@ -360,6 +360,7 @@ function DaysChip({ days }) {
 /* ── Main Dashboard ────────────────────────────────────────── */
 export default function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [analytics, setAnalytics]     = useState(null);
   const [achievements, setAchievements] = useState([]);
   const [upcoming, setUpcoming]       = useState([]);
@@ -496,7 +497,8 @@ export default function Dashboard() {
           <motion.div className="flex flex-wrap gap-3 mt-6"
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ ...SPRING_SNAPPY, delay: 0.35 }}>
-            <MagneticBtn to="/kudos"
+            <MagneticBtn
+              onClick={() => navigate('/kudos', { state: { openModal: true } })}
               className="btn-primary"
               style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', boxShadow: '0 4px 24px rgba(99,102,241,0.4)' }}>
               <Heart size={16} /> Give Kudos
@@ -564,25 +566,32 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Upcoming Celebrations */}
+        {/* Pinned Announcements — moved here from bottom row */}
         <motion.div className="xl:col-span-2 glass-card p-6"
           initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.35 }}>
-          <SectionHeader icon={PartyPopper} color="#ec4899" title="Upcoming" link="/celebrations" />
-          <div className="space-y-2">
-            {upcoming.map((item, i) => (
-              <motion.div key={item.id}
-                className="flex items-center gap-3 p-3 rounded-2xl"
+          <SectionHeader icon={Megaphone} color="#3b82f6" title="Pinned Announcements" link="/announcements" />
+          <div className="space-y-3">
+            {announcements.map((ann, i) => (
+              <motion.div key={ann.id}
+                className="p-4 rounded-2xl cursor-pointer"
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ ...SPRING_SNAPPY, delay: 0.4 + i * 0.06 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
-                whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)', transition: { duration: 0.15 } }}>
-                <Avatar photo={item.photo} initials={item.avatar} color={item.coverColor} size="sm" shape="circle" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-white/80 text-sm font-semibold truncate">{item.employeeName}</p>
-                  <p className="text-white/35 text-xs">{item.type === 'birthday' ? '🎂 Birthday' : `🎊 ${item.years}yr Anniversary`}</p>
+                whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)', y: -2, transition: { duration: 0.15 } }}>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: `${ann.categoryColor}15` }}>
+                    <Bell size={14} style={{ color: ann.categoryColor }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white/80 text-sm font-semibold leading-snug line-clamp-2">{ann.title}</p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="badge" style={{ background: `${ann.categoryColor}15`, color: ann.categoryColor, border: `1px solid ${ann.categoryColor}20` }}>{ann.category}</span>
+                      <span className="text-xs text-white/25">{format(parseISO(ann.date), 'MMM d')}</span>
+                      <span className="text-xs text-white/20 ml-auto">❤️ {ann.likes}</span>
+                    </div>
+                  </div>
                 </div>
-                <DaysChip days={item.daysUntil} />
               </motion.div>
             ))}
           </div>
@@ -606,8 +615,8 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               upcoming.some(u => u.daysUntil === 0) && { icon: '🎂', color: '#ec4899', title: `${upcoming.find(u => u.daysUntil === 0)?.employeeName}'s Birthday Today!`, sub: 'Tap to send them wishes', link: '/celebrations' },
-              { icon: '❤️', color: '#f43f5e', title: 'Give kudos to a teammate', sub: 'Recognition boosts morale', link: '/kudos' },
-              { icon: '💙', color: '#818cf8', title: 'Check in your pulse', sub: 'Anonymous · 10 seconds', link: '/pulse' },
+              { icon: '📋', color: '#a78bfa', title: 'Explore Policies', sub: 'Stay informed on company policies', link: '/policies' },
+              { icon: '🎉', color: '#f59e0b', title: 'Fun Friday', sub: "See this week's fun activity", link: '/fun-friday' },
               { icon: '📍', color: '#34d399', title: "Who's in the office today?", sub: '6 of 10 team members active', link: '/whos-in' },
             ].filter(Boolean).slice(0, 4).map((item, i) => (
               <motion.div key={i}
@@ -686,32 +695,25 @@ export default function Dashboard() {
       {/* ── Bottom Row ─────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-        {/* Announcements */}
+        {/* Upcoming Celebrations — moved here from main grid */}
         <motion.div className="glass-card p-6"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.5 }}>
-          <SectionHeader icon={Megaphone} color="#3b82f6" title="Pinned Announcements" link="/announcements" />
-          <div className="space-y-3">
-            {announcements.map((ann, i) => (
-              <motion.div key={ann.id}
-                className="p-4 rounded-2xl cursor-pointer"
+          <SectionHeader icon={PartyPopper} color="#ec4899" title="Upcoming" link="/celebrations" />
+          <div className="space-y-2">
+            {upcoming.map((item, i) => (
+              <motion.div key={item.id}
+                className="flex items-center gap-3 p-3 rounded-2xl"
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ ...SPRING_SNAPPY, delay: 0.55 + i * 0.07 }}
+                transition={{ ...SPRING_SNAPPY, delay: 0.55 + i * 0.06 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
-                whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)', y: -2, transition: { duration: 0.15 } }}>
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: `${ann.categoryColor}15` }}>
-                    <Bell size={14} style={{ color: ann.categoryColor }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white/80 text-sm font-semibold leading-snug line-clamp-2">{ann.title}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="badge" style={{ background: `${ann.categoryColor}15`, color: ann.categoryColor, border: `1px solid ${ann.categoryColor}20` }}>{ann.category}</span>
-                      <span className="text-xs text-white/25">{format(parseISO(ann.date), 'MMM d')}</span>
-                      <span className="text-xs text-white/20 ml-auto">❤️ {ann.likes}</span>
-                    </div>
-                  </div>
+                whileHover={{ backgroundColor: 'rgba(255,255,255,0.05)', transition: { duration: 0.15 } }}>
+                <Avatar photo={item.photo} initials={item.avatar} color={item.coverColor} size="sm" shape="circle" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-white/80 text-sm font-semibold truncate">{item.employeeName}</p>
+                  <p className="text-white/35 text-xs">{item.type === 'birthday' ? '🎂 Birthday' : `🎊 ${item.years}yr Anniversary`}</p>
                 </div>
+                <DaysChip days={item.daysUntil} />
               </motion.div>
             ))}
           </div>

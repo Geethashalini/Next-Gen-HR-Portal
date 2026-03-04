@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, BellOff, PartyPopper, Cake } from 'lucide-react';
+import { Bell, BellOff, Heart, Send, X, MessageCircle, Cake } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { employeesAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 /* ─────────────────────────────────────────────────────────────
@@ -170,10 +172,226 @@ function DigitBlock({ value, label, color }) {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Teammate Wishes Modal — shown when user clicks "See Wishes"
+───────────────────────────────────────────────────────────── */
+const WISH_MESSAGES = [
+  "Wishing you all the happiness in the world today! 🎂",
+  "Happy Birthday! May this year bring you tons of joy and success! 🚀",
+  "Hope your day is as wonderful as you are! 🌟",
+  "Cheers to another year of awesomeness! 🥂",
+  "Sending you the warmest birthday wishes! 🎉",
+  "May all your dreams come true this year! ✨",
+  "You're a rockstar — happy birthday! 🎸",
+  "Another year wiser, stronger, and more amazing! 💪",
+];
+
+function WishesModal({ user, onClose, fire }) {
+  const [employees, setEmployees] = useState([]);
+  const [wishes, setWishes]       = useState([]);
+  const [myWish, setMyWish]       = useState('');
+  const [sent, setSent]           = useState(false);
+
+  useEffect(() => {
+    // Fire confetti burst on modal open
+    const cx = window.innerWidth / 2, cy = window.innerHeight * 0.25;
+    fire(cx, cy, 130);
+    setTimeout(() => fire(cx - 150, cy + 60, 80), 280);
+    setTimeout(() => fire(cx + 150, cy + 60, 80), 560);
+
+    // Load teammates and generate mock wishes
+    employeesAPI.getAll().then(emps => {
+      const teammates = emps.filter(e => e.id !== (user?.id || 'emp001'));
+      setEmployees(teammates);
+      const generated = teammates.map((emp, i) => ({
+        id:      emp.id,
+        name:    emp.name,
+        photo:   emp.photo,
+        avatar:  emp.avatar,
+        color:   emp.coverColor,
+        message: WISH_MESSAGES[i % WISH_MESSAGES.length],
+        liked:   false,
+      }));
+      setWishes(generated);
+    }).catch(() => {});
+  }, []);
+
+  const handleLike = (id) => {
+    setWishes(w => w.map(wish =>
+      wish.id === id ? { ...wish, liked: !wish.liked } : wish
+    ));
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!myWish.trim()) return;
+    // Fire a small confetti on send
+    fire(window.innerWidth / 2, window.innerHeight / 2, 60);
+    setSent(true);
+    toast.success('🎉 Your wish was sent!');
+    setMyWish('');
+  };
+
+  return createPortal(
+    <motion.div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(16px)' }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="w-full max-w-lg overflow-hidden flex flex-col"
+        style={{ maxHeight: '85vh', background: 'rgb(10,8,24)', border: '1px solid rgba(236,72,153,0.3)', borderRadius: 24, boxShadow: '0 32px 80px rgba(0,0,0,0.8), 0 0 60px rgba(236,72,153,0.15)' }}
+        initial={{ scale: 0.88, y: 30, opacity: 0 }}
+        animate={{ scale: 1,    y: 0,  opacity: 1 }}
+        exit={{    scale: 0.92, y: 10, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Gradient top bar */}
+        <div className="h-1.5 flex-shrink-0" style={{ background: 'linear-gradient(90deg, #ec4899, #8b5cf6, #f59e0b)' }} />
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center gap-2">
+            <motion.div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ background: 'rgba(236,72,153,0.15)', border: '1px solid rgba(236,72,153,0.3)' }}
+              animate={{ rotate: [0,12,-12,0], scale:[1,1.1,1] }} transition={{ duration:1.5, repeat:Infinity }}>
+              <Cake size={18} style={{ color: '#f472b6' }} />
+            </motion.div>
+            <div>
+              <h3 className="text-white font-black text-sm">Birthday Wishes</h3>
+              <p className="text-white/30 text-xs">{wishes.length} teammates sending love</p>
+            </div>
+          </div>
+          <motion.button onClick={onClose} whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="p-1.5 rounded-xl text-white/30 hover:text-white hover:bg-white/8 transition-colors">
+            <X size={16} />
+          </motion.button>
+        </div>
+
+        {/* Birthday person photo + message */}
+        <div className="flex-shrink-0 py-5 px-6 text-center" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(236,72,153,0.04)' }}>
+          {user?.photo && (
+            <div className="flex justify-center mb-3">
+              <motion.div
+                className="relative"
+                animate={{ scale: [1, 1.03, 1] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <div className="w-24 h-24 rounded-2xl overflow-hidden"
+                  style={{ border: '3px solid rgba(236,72,153,0.6)', boxShadow: '0 0 30px rgba(236,72,153,0.35), 0 8px 24px rgba(0,0,0,0.5)' }}>
+                  <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
+                </div>
+                {/* Floating star decorations */}
+                {['✨','🌟','⭐'].map((s, i) => (
+                  <motion.span key={i} className="absolute text-sm pointer-events-none"
+                    style={{ top: `${-8 + i * 12}px`, right: `${-10 + i * 5}px` }}
+                    animate={{ y: [0, -5, 0], opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.4 }}>
+                    {s}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
+          )}
+          <motion.p
+            className="text-white/70 text-sm font-semibold"
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          >
+            Wishing you many more happy returns of the day,
+          </motion.p>
+          <motion.p
+            className="font-black text-base mt-0.5"
+            style={{ background: 'linear-gradient(135deg, #f472b6, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          >
+            {user?.name?.split(' ')[0]}! 🎉
+          </motion.p>
+          <motion.p
+            className="text-white/35 text-xs mt-2"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+          >
+            Your team celebrates you today — wishing you an amazing year ahead! 🥳
+          </motion.p>
+        </div>
+
+        {/* Wishes list */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
+          {wishes.map((wish, i) => (
+            <motion.div key={wish.id}
+              className="flex items-start gap-3 p-3.5 rounded-2xl"
+              initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 + i * 0.06, type: 'spring', stiffness: 200, damping: 24 }}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              {/* Avatar */}
+              <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
+                style={{ border: `2px solid ${wish.color}50` }}>
+                {wish.photo
+                  ? <img src={wish.photo} alt={wish.name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-xs font-black"
+                      style={{ background: `${wish.color}30`, color: wish.color }}>{wish.avatar}</div>
+                }
+              </div>
+              {/* Message */}
+              <div className="flex-1 min-w-0">
+                <p className="text-white/80 text-xs font-bold mb-0.5">{wish.name}</p>
+                <p className="text-white/50 text-xs leading-relaxed italic">"{wish.message}"</p>
+              </div>
+              {/* Like */}
+              <button onClick={() => handleLike(wish.id)}
+                className="flex-shrink-0 p-1.5 rounded-xl transition-all"
+                style={wish.liked
+                  ? { background: 'rgba(244,63,94,0.18)', color: '#f87171' }
+                  : { color: 'rgba(255,255,255,0.2)' }
+                }>
+                <Heart size={13} className={wish.liked ? 'fill-current' : ''} />
+              </button>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Send your wish */}
+        <div className="flex-shrink-0 px-5 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(99,102,241,0.04)' }}>
+          {sent ? (
+            <motion.div
+              className="flex items-center gap-2 justify-center py-2"
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+            >
+              <span className="text-emerald-400 text-sm font-bold">✓ Sent!</span>
+              <button onClick={() => setSent(false)} className="text-white/30 text-xs hover:text-white/60 transition-colors">Send another</button>
+            </motion.div>
+          ) : (
+            <form onSubmit={handleSend} className="flex gap-2">
+              <input
+                value={myWish}
+                onChange={e => setMyWish(e.target.value)}
+                placeholder="Reply"
+                className="flex-1 px-4 py-2.5 rounded-xl text-sm text-white placeholder-white/20 outline-none"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+              />
+              <motion.button type="submit" whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+                className="px-4 py-2.5 rounded-xl font-bold text-sm text-white flex items-center gap-1.5 flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', boxShadow: '0 4px 16px rgba(236,72,153,0.35)' }}>
+                <Send size={14} /> Send
+              </motion.button>
+            </form>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>,
+    document.body
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
    Birthday Mode — shown when timer hits 00:00:00
 ───────────────────────────────────────────────────────────── */
-function BirthdayModeCard({ name, fire }) {
-  const [confettied, setConfettied] = useState(false);
+function BirthdayModeCard({ user, fire }) {
+  const [showWishes, setShowWishes]   = useState(false);
+  const [floatingWishes, setFloatingWishes] = useState([]);
+  const [likedIds, setLikedIds]       = useState(new Set());
 
   useEffect(() => {
     // Auto-fire triple burst on mount
@@ -181,60 +399,182 @@ function BirthdayModeCard({ name, fire }) {
     fire(cx, cy, 120);
     setTimeout(() => fire(cx - 120, cy + 40, 80), 300);
     setTimeout(() => fire(cx + 120, cy + 40, 80), 600);
+
+    // Load teammates for floating bubbles
+    employeesAPI.getAll().then(emps => {
+      const teammates = emps.filter(e => e.id !== (user?.id || 'emp001'));
+      setFloatingWishes(teammates.map((emp, i) => ({
+        id: emp.id, name: emp.name, photo: emp.photo,
+        avatar: emp.avatar, color: emp.coverColor,
+        message: WISH_MESSAGES[i % WISH_MESSAGES.length],
+      })));
+    }).catch(() => {});
   }, []);
 
-  return (
-    <motion.div
-      initial={{ scale: 0.85, opacity: 0 }}
-      animate={{ scale: 1,    opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 22 }}
-      className="relative overflow-hidden rounded-3xl p-6 text-center"
-      style={{
-        background: 'linear-gradient(135deg, rgba(236,72,153,0.2), rgba(99,102,241,0.15), rgba(245,158,11,0.1))',
-        border:     '1px solid rgba(236,72,153,0.5)',
-        boxShadow:  '0 0 50px rgba(236,72,153,0.25), 0 0 80px rgba(99,102,241,0.1)',
-      }}
-    >
-      {/* Animated stars */}
-      {['✨','🌟','⭐','💫'].map((s, i) => (
-        <motion.span key={i} className="absolute text-lg pointer-events-none"
-          style={{ top: `${10 + i * 20}%`, left: `${5 + i * 22}%` }}
-          animate={{ y: [0, -12, 0], opacity: [0.6, 1, 0.6], rotate: [0, 15, -15, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.35, ease: 'easeInOut' }}>
-          {s}
-        </motion.span>
-      ))}
+  // Show up to 6 bubbles inline (2 cols × 3 rows); rest go in modal
+  const VISIBLE = 6;
+  const visibleWishes = floatingWishes.slice(0, VISIBLE);
+  const extraCount   = Math.max(0, floatingWishes.length - VISIBLE);
 
-      <motion.div className="text-6xl mb-3"
-        animate={{ rotate: [0, 12, -12, 0], scale: [1, 1.15, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
-        🎂
+  return (
+    <>
+      <motion.div
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1,    opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 22 }}
+        className="relative overflow-hidden rounded-3xl px-8 py-7"
+        style={{
+          background: 'linear-gradient(135deg, rgba(236,72,153,0.2), rgba(99,102,241,0.15), rgba(245,158,11,0.1))',
+          border:     '1px solid rgba(236,72,153,0.5)',
+          boxShadow:  '0 0 50px rgba(236,72,153,0.25), 0 0 80px rgba(99,102,241,0.1)',
+        }}
+      >
+        {/* Animated floating stars — spread across full width */}
+        {[
+          { s: '✨', top: '10%',  left: '3%'  },
+          { s: '🌟', top: '65%',  left: '12%' },
+          { s: '⭐', top: '15%',  left: '84%' },
+          { s: '💫', top: '72%',  left: '92%' },
+        ].map(({ s, top, left }, i) => (
+          <motion.span key={i} className="absolute text-base pointer-events-none"
+            style={{ top, left }}
+            animate={{ y: [0, -10, 0], opacity: [0.3, 0.8, 0.3], rotate: [0, 15, -15, 0] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4, ease: 'easeInOut' }}>
+            {s}
+          </motion.span>
+        ))}
+
+        {/* Main horizontal layout */}
+        <div className="relative z-10 flex items-center gap-8">
+
+          {/* Left — photo */}
+          {user?.photo && (
+            <motion.div
+              className="relative flex-shrink-0"
+              animate={{ scale: [1, 1.04, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <div className="w-32 h-32 rounded-2xl overflow-hidden"
+                style={{ border: '3px solid rgba(236,72,153,0.7)', boxShadow: '0 0 32px rgba(236,72,153,0.4), 0 8px 24px rgba(0,0,0,0.5)' }}>
+                <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
+              </div>
+              {['✨','🌟'].map((s, i) => (
+                <motion.span key={i} className="absolute text-sm pointer-events-none"
+                  style={{ top: `${-6 + i * 10}px`, right: `${-10 + i * 4}px` }}
+                  animate={{ y: [0, -6, 0], opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}>
+                  {s}
+                </motion.span>
+              ))}
+            </motion.div>
+          )}
+
+          {/* Centre — text + button */}
+          <div className="flex-shrink-0" style={{ minWidth: 220 }}>
+            <motion.div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-2"
+              style={{ background: 'linear-gradient(135deg, rgba(236,72,153,0.25), rgba(245,158,11,0.15))', border: '1px solid rgba(236,72,153,0.4)', boxShadow: '0 0 16px rgba(236,72,153,0.3)' }}
+              animate={{ rotate: [0, 12, -12, 0], scale: [1, 1.08, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}>
+              <Cake size={20} style={{ color: '#f472b6' }} strokeWidth={1.5} />
+            </motion.div>
+
+            <motion.h3 className="text-white text-xl font-black mb-1 tracking-tight"
+              style={{ background: 'linear-gradient(135deg, #f472b6, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              🎉 Happy Birthday, {user?.name?.split(' ')[0]}!
+            </motion.h3>
+
+            <p className="text-white/45 text-xs italic mb-4">
+              "Wishing you many more happy returns of the day!" 🎊
+            </p>
+
+            <motion.button
+              whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+              onClick={() => setShowWishes(true)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-white text-sm"
+              style={{ background: 'linear-gradient(135deg, #ec4899, #f59e0b)', boxShadow: '0 6px 20px rgba(236,72,153,0.5)' }}
+            >
+              <MessageCircle size={15} />
+              See Wishes 🎊
+            </motion.button>
+          </div>
+
+          {/* Right — floating teammate wish bubbles (2-column grid) */}
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-2 gap-2">
+              {visibleWishes.map((wish, i) => {
+                const liked = likedIds.has(wish.id);
+                return (
+                  <motion.div
+                    key={wish.id}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-2xl cursor-pointer"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + i * 0.08, type: 'spring', stiffness: 200, damping: 24 }}
+                    whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                    onClick={() => setShowWishes(true)}
+                  >
+                    {/* Avatar */}
+                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"
+                      style={{ border: `2px solid ${wish.color}60` }}>
+                      {wish.photo
+                        ? <img src={wish.photo} alt={wish.name} className="w-full h-full object-cover" />
+                        : <div className="w-full h-full flex items-center justify-center text-[10px] font-black"
+                            style={{ background: `${wish.color}30`, color: wish.color }}>{wish.avatar}</div>
+                      }
+                    </div>
+                    {/* Name + message */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white/80 text-xs font-bold truncate">{wish.name}</p>
+                      <p className="text-white/45 text-[11px] truncate italic">"{wish.message}"</p>
+                    </div>
+                    {/* Heart — stop propagation so click doesn't open modal */}
+                    <motion.button
+                      whileTap={{ scale: 1.4 }}
+                      className="flex-shrink-0 p-1 rounded-lg transition-colors"
+                      style={liked
+                        ? { color: '#f43f5e' }
+                        : { color: 'rgba(255,255,255,0.25)' }
+                      }
+                      onClick={e => {
+                        e.stopPropagation();
+                        setLikedIds(prev => {
+                          const next = new Set(prev);
+                          next.has(wish.id) ? next.delete(wish.id) : next.add(wish.id);
+                          return next;
+                        });
+                      }}
+                    >
+                      <Heart size={13} className={liked ? 'fill-current' : ''} />
+                    </motion.button>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* +N more pill */}
+            {extraCount > 0 && (
+              <motion.button
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}
+                onClick={() => setShowWishes(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold mt-2"
+                style={{ background: 'rgba(236,72,153,0.12)', border: '1px solid rgba(236,72,153,0.25)', color: '#f472b6' }}
+                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+              >
+                <MessageCircle size={11} /> +{extraCount} more wishes
+              </motion.button>
+            )}
+          </div>
+
+        </div>
       </motion.div>
 
-      <motion.h3 className="text-white text-2xl font-black mb-1 tracking-tight"
-        style={{ background: 'linear-gradient(135deg, #f472b6, #fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-        🎉 Happy Birthday, {name?.split(' ')[0]}!
-      </motion.h3>
-
-      <p className="text-white/55 text-sm mb-5">
-        Your team celebrates you today — wishing you an amazing year ahead! 🥳
-      </p>
-
-      <motion.button
-        whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
-        onClick={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          fire(r.left + r.width / 2, r.top, 100);
-          setConfettied(true);
-          toast('🎉 Woohoo! Celebrate big!', { icon: '🎂' });
-        }}
-        className="flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-white mx-auto"
-        style={{ background: 'linear-gradient(135deg, #ec4899, #f59e0b)', boxShadow: '0 6px 24px rgba(236,72,153,0.5)' }}
-      >
-        <PartyPopper size={18} />
-        {confettied ? 'More Confetti! 🎊' : '🎊 Celebrate!'}
-      </motion.button>
-    </motion.div>
+      <AnimatePresence>
+        {showWishes && (
+          <WishesModal user={user} onClose={() => setShowWishes(false)} fire={fire} />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -277,7 +617,7 @@ export default function BirthdayCountdownCard({ user }) {
   if (isBirthday) {
     return (
       <div className="col-span-full">
-        <BirthdayModeCard name={user?.name} fire={fire} />
+        <BirthdayModeCard user={user} fire={fire} />
       </div>
     );
   }
@@ -302,27 +642,27 @@ export default function BirthdayCountdownCard({ user }) {
         style={{ boxShadow: `inset 0 0 30px ${accentColor}40` }}
       />
 
-      {/* Floating background cake */}
-      <motion.span
-        className="absolute -right-4 -bottom-4 text-8xl opacity-5 pointer-events-none select-none"
+      {/* Floating background cake icon */}
+      <motion.div
+        className="absolute -right-4 -bottom-4 opacity-5 pointer-events-none select-none"
         animate={{ rotate: [0, 8, -8, 0], y: [0, -6, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
-        🎂
-      </motion.span>
+        <Cake size={96} strokeWidth={1} style={{ color: 'white' }} />
+      </motion.div>
 
       <div className="relative z-10 p-5">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <motion.div
-              className="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl"
+              className="w-11 h-11 rounded-2xl flex items-center justify-center"
               style={{ background: `${accentColor}20`, border: `1px solid ${accentColor}35` }}
               animate={isWithin5min
                 ? { y: [0, -6, 0], rotate: [0, 10, -10, 0] }
                 : { y: [0, -4, 0] }
               }
               transition={{ duration: isWithin5min ? 0.8 : 2.5, repeat: Infinity, ease: 'easeInOut' }}>
-              🎂
+              <Cake size={20} style={{ color: accentColor }} strokeWidth={1.8} />
             </motion.div>
             <div>
               <p className="text-white font-black text-sm leading-tight">Your Birthday is Coming!</p>
@@ -339,7 +679,7 @@ export default function BirthdayCountdownCard({ user }) {
             {isWithin5min  ? '🔥 Almost!' :
              isWithin10min ? '⚡ Very Soon!' :
              isWithin1h    ? '⏰ < 1 Hour' :
-                             `🎂 < 24 Hours`}
+                             `< 24 Hours`}
           </motion.span>
         </div>
 
