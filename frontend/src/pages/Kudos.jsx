@@ -144,7 +144,7 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
               {BADGES.map(badge => (
                 <button key={badge.value} type="button"
                   onClick={() => setForm(f => ({ ...f, badge: badge.value, badgeColor: badge.color }))}
-                  className="px-3 py-2 rounded-xl text-sm font-semibold text-left transition-all duration-200 flex items-center gap-2"
+                  className={`px-3 py-2 rounded-xl text-sm font-semibold text-left transition-all duration-200 flex items-center gap-2 ${form.badge !== badge.value ? 'kudos-btn-inactive' : ''}`}
                   style={form.badge === badge.value
                     ? { background: `${badge.color}20`, border: `1px solid ${badge.color}40`, color: badge.color }
                     : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)' }
@@ -162,7 +162,7 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
               {CATEGORIES.map(cat => (
                 <button key={cat} type="button"
                   onClick={() => setForm(f => ({ ...f, category: cat }))}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${form.category !== cat ? 'kudos-btn-inactive' : ''}`}
                   style={form.category === cat
                     ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', boxShadow: '0 4px 16px rgba(99,102,241,0.35)' }
                     : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)' }
@@ -185,7 +185,7 @@ function GiveKudosModal({ employees, onClose, onSubmit }) {
             <div className="flex gap-2">
               {[50, 75, 100, 150].map(pts => (
                 <button key={pts} type="button" onClick={() => setForm(f => ({ ...f, points: pts }))}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-black transition-all"
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${form.points !== pts ? 'kudos-btn-inactive' : ''}`}
                   style={form.points === pts
                     ? { background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white', boxShadow: '0 4px 16px rgba(99,102,241,0.4)' }
                     : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)' }

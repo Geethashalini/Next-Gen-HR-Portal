@@ -200,14 +200,14 @@ function Counter({ value, duration = 1.4 }) {
 
 /* ── Stat Card ─────────────────────────────────────────────── */
 const statConfigs = [
-  { key: 'totalEmployees',    label: 'Team Members',  icon: Users,    grad: ['#6366f1','#8b5cf6'], glow: '#6366f1', trend: '+2 this month',    link: '/directory'     },
-  { key: 'totalAchievements', label: 'Achievements',  icon: Trophy,   grad: ['#f59e0b','#fb923c'], glow: '#f59e0b', trend: '3 this quarter',   link: '/spotlight'     },
-  { key: 'totalKudos',        label: 'Kudos Sent',    icon: Heart,    grad: ['#ec4899','#f43f5e'], glow: '#ec4899', trend: 'Team is thriving', link: '/kudos'         },
-  { key: 'totalAnnouncements',label: 'Announcements', icon: Megaphone,grad: ['#3b82f6','#06b6d4'], glow: '#3b82f6', trend: '3 pinned updates', link: '/announcements' },
+  { key: 'totalEmployees',    label: 'Team Members',  icon: Users,    grad: ['#6366f1','#8b5cf6'], glow: '#6366f1', trend: '+2 this month',    link: '/directory',     pastel: 'card-blue'   },
+  { key: 'totalAchievements', label: 'Achievements',  icon: Trophy,   grad: ['#f59e0b','#fb923c'], glow: '#f59e0b', trend: '3 this quarter',   link: '/spotlight',     pastel: 'card-peach'  },
+  { key: 'totalKudos',        label: 'Kudos Sent',    icon: Heart,    grad: ['#ec4899','#f43f5e'], glow: '#ec4899', trend: 'Team is thriving', link: '/kudos',         pastel: 'card-lilac'  },
+  { key: 'totalAnnouncements',label: 'Announcements', icon: Megaphone,grad: ['#3b82f6','#06b6d4'], glow: '#3b82f6', trend: '3 pinned updates', link: '/announcements', pastel: 'card-sky'    },
 ];
 
 function StatCard({ config, value, index }) {
-  const { label, icon: Icon, grad, glow, trend, link } = config;
+  const { label, icon: Icon, grad, glow, trend, link, pastel } = config;
   return (
     <motion.div
       initial={{ opacity: 0, y: 24, scale: 0.94 }}
@@ -215,7 +215,7 @@ function StatCard({ config, value, index }) {
       transition={{ ...SPRING_SNAPPY, delay: index * 0.08 }}
     >
       <TiltCard intensity={6}>
-        <Link to={link} className="block glass-card p-5 relative overflow-hidden group"
+        <Link to={link} className={`block glass-card ${pastel} p-5 relative overflow-hidden group`}
           style={{ boxShadow: `0 8px 40px rgba(0,0,0,0.35)`, textDecoration: 'none' }}>
 
           {/* Animated corner glow */}
@@ -616,7 +616,7 @@ export default function Dashboard() {
       transition={{ duration: 0.4 }}>
 
       {/* ── Hero ──────────────────────────────────────────── */}
-      <motion.div className="relative overflow-hidden glass-card"
+      <motion.div className="relative overflow-hidden glass-card card-lavender"
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
         transition={{ ...SPRING_SOFT, delay: 0.05 }}
         style={{ padding: '32px', border: '1px solid rgba(99,102,241,0.2)', boxShadow: '0 8px 60px rgba(0,0,0,0.4)' }}>
@@ -710,6 +710,7 @@ export default function Dashboard() {
                   value: analytics?.overview?.totalAchievements ?? '—',
                   sub: 'awards earned',
                   color: '#f59e0b',
+                  pastel: 'card-lemon',
                   go: () => navigate('/spotlight', { state: { filterEmployee: user?.id, employeeName: user?.name } }),
                 },
                 {
@@ -718,6 +719,7 @@ export default function Dashboard() {
                   value: analytics?.overview?.totalKudos ?? '—',
                   sub: 'this month',
                   color: '#ec4899',
+                  pastel: 'card-rose',
                   go: () => navigate('/kudos', { state: { filterTo: user?.id } }),
                 },
                 {
@@ -726,12 +728,13 @@ export default function Dashboard() {
                   value: myLeaves ? `${myLeaves.remaining}` : '—',
                   sub: 'days remaining',
                   color: '#10b981',
+                  pastel: 'card-mint',
                   go: () => navigate('/leaves'),
                 },
-              ].map(({ icon: Icon, label, value, sub, color, go }, i) => (
+              ].map(({ icon: Icon, label, value, sub, color, pastel, go }, i) => (
                 <motion.button key={label} onClick={go}
-                  className="text-left p-4 rounded-2xl group transition-all"
-                  style={{ background: `${color}0d`, border: `1px solid ${color}20` }}
+                  className={`text-left p-4 rounded-2xl group transition-all ${pastel}`}
+                  style={{ border: `1px solid ${color}20` }}
                   whileHover={{ y: -3, boxShadow: `0 8px 24px ${color}20` }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ duration: 0.15 }}>
@@ -787,14 +790,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-5">
 
         {/* Featured Achievements */}
-        <motion.div className="xl:col-span-3 glass-card p-6"
+        <motion.div className="xl:col-span-3 glass-card card-aqua p-6"
           initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.3 }}>
           <SectionHeader icon={Trophy} color="#f59e0b" title="Featured Achievements" link="/spotlight" />
           <div className="space-y-3">
             {achievements.map((ach, i) => (
               <motion.div key={ach.id}
-                className="flex items-start gap-4 p-4 rounded-2xl cursor-pointer group"
+                className="flex items-start gap-4 p-4 rounded-2xl cursor-pointer group item-row"
                 initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
                 transition={{ ...SPRING_SNAPPY, delay: 0.35 + i * 0.08 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
@@ -826,14 +829,14 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Pinned Announcements — moved here from bottom row */}
-        <motion.div className="xl:col-span-2 glass-card p-6"
+        <motion.div className="xl:col-span-2 glass-card card-ice p-6"
           initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.35 }}>
           <SectionHeader icon={Megaphone} color="#3b82f6" title="Pinned Announcements" link="/announcements" />
           <div className="space-y-3">
             {announcements.map((ann, i) => (
               <motion.div key={ann.id}
-                className="p-4 rounded-2xl cursor-pointer"
+                className="p-4 rounded-2xl cursor-pointer item-row"
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ ...SPRING_SNAPPY, delay: 0.4 + i * 0.06 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
@@ -859,10 +862,10 @@ export default function Dashboard() {
 
       {/* ── Today For You + Pulse ──────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <motion.div className="lg:col-span-2 glass-card p-6"
+        <motion.div className="lg:col-span-2 glass-card card-warm p-6"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.4 }}
-          style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.07), rgba(139,92,246,0.04))', border: '1px solid rgba(99,102,241,0.15)' }}>
+          style={{ border: '1px solid rgba(99,102,241,0.15)' }}>
           <div className="flex items-center gap-2 mb-4">
             <motion.div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'rgba(99,102,241,0.15)' }}
               animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}>
@@ -901,10 +904,10 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Team Pulse Mini */}
-        <motion.div className="glass-card p-6 flex flex-col"
+        <motion.div className="glass-card card-pulse p-6 flex flex-col"
           initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.45 }}
-          style={{ border: '1px solid rgba(129,140,248,0.2)', background: 'rgba(99,102,241,0.04)' }}>
+          style={{ border: '1px solid rgba(129,140,248,0.2)' }}>
           <div className="flex items-center gap-2 mb-4">
             <Activity size={16} style={{ color: '#818cf8' }} />
             <h3 className="text-white font-bold text-sm">Team Pulse</h3>
@@ -958,14 +961,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         {/* Upcoming Celebrations — moved here from main grid */}
-        <motion.div className="glass-card p-6"
+        <motion.div className="glass-card card-celebrations p-6"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.5 }}>
           <SectionHeader icon={PartyPopper} color="#ec4899" title="Upcoming" link="/celebrations" />
           <div className="space-y-2">
             {upcoming.map((item, i) => (
               <motion.div key={item.id}
-                className="flex items-center gap-3 p-3 rounded-2xl"
+                className="flex items-center gap-3 p-3 rounded-2xl item-row"
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ ...SPRING_SNAPPY, delay: 0.55 + i * 0.06 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
@@ -982,14 +985,14 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Recent Kudos */}
-        <motion.div className="glass-card p-6"
+        <motion.div className="glass-card card-kudos p-6"
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ ...SPRING_SOFT, delay: 0.55 }}>
           <SectionHeader icon={Heart} color="#ec4899" title="Recent Kudos" link="/kudos" />
           <div className="space-y-3">
             {kudos.map((kudo, i) => (
               <motion.div key={kudo.id}
-                className="p-4 rounded-2xl cursor-pointer group"
+                className="p-4 rounded-2xl cursor-pointer group item-row"
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ ...SPRING_SNAPPY, delay: 0.6 + i * 0.07 }}
                 style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}

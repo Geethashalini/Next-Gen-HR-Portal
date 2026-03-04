@@ -47,7 +47,7 @@ function EmployeeRow({ emp, status, onStatusChange }) {
   const s = STATUSES.find(x => x.id === status) || STATUSES[3];
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl transition-all duration-200 group"
+    <div className="flex items-center gap-3 p-3 rounded-2xl transition-all duration-200 group whosin-row"
       style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.025)'; }}
@@ -55,13 +55,13 @@ function EmployeeRow({ emp, status, onStatusChange }) {
       <div className="relative flex-shrink-0">
         <Avatar photo={emp.photo} initials={emp.avatar} color={emp.color} size="sm" />
         <StatusDot status={status} />
-        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border"
-          style={{ background: s.dot, borderColor: '#080714', boxShadow: `0 0 6px ${s.dot}80` }} />
+        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2"
+          style={{ background: s.dot, borderColor: 'var(--bg-base)', boxShadow: `0 0 6px ${s.dot}80` }} />
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-white/80 text-sm font-semibold truncate">{emp.name}</p>
-        <p className="text-white/35 text-xs truncate">{emp.role}</p>
+        <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{emp.name}</p>
+        <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{emp.role}</p>
       </div>
 
       {/* Status selector */}
@@ -69,13 +69,13 @@ function EmployeeRow({ emp, status, onStatusChange }) {
         {STATUSES.map(st => (
           <button key={st.id} onClick={() => onStatusChange(emp.id, st.id)}
             title={st.label}
-            className="w-7 h-7 rounded-xl flex items-center justify-center transition-all duration-150"
+            className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all duration-150 ${status !== st.id ? 'whosin-status-btn-inactive' : ''}`}
             style={status === st.id
               ? { background: st.bg, border: `1px solid ${st.border}`, boxShadow: `0 0 10px ${st.color}30` }
               : { background: 'transparent', opacity: 0.3 }
             }
           >
-            <st.icon size={13} style={{ color: status === st.id ? st.color : 'rgba(255,255,255,0.4)' }} />
+            <st.icon size={13} className={status !== st.id ? 'whosin-status-inactive-icon' : ''} style={{ color: status === st.id ? st.color : 'rgba(255,255,255,0.4)' }} />
           </button>
         ))}
       </div>
@@ -92,8 +92,8 @@ function StatChip({ icon: Icon, label, count, color }) {
         <Icon size={18} style={{ color }} />
       </div>
       <div>
-        <p className="text-white font-black text-2xl">{count}</p>
-        <p className="text-white/40 text-xs">{label}</p>
+        <p className="font-black text-2xl" style={{ color: 'var(--text-primary)' }}>{count}</p>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{label}</p>
       </div>
     </div>
   );
@@ -143,8 +143,8 @@ export default function WhosIn() {
               style={{ background: 'linear-gradient(135deg, #34d399, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Who's In Today?
             </h1>
-            <p className="text-white/40 text-sm">Live office attendance board · Updates in real-time</p>
-            <div className="flex items-center gap-1.5 mt-2 text-xs text-white/25">
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Live office attendance board · Updates in real-time</p>
+            <div className="flex items-center gap-1.5 mt-2 text-xs" style={{ color: 'var(--text-faint)' }}>
               <Clock size={11} />
               Last updated {lastUpdated.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
               <button onClick={() => setLastUpdated(new Date())} className="ml-1 hover:text-white/60 transition-colors">
@@ -173,7 +173,7 @@ export default function WhosIn() {
       <div className="flex gap-2 flex-wrap">
         {[{ id: 'all', label: 'Everyone', count: EMPLOYEES.length }, ...STATUSES.map(s => ({ ...s, count: counts[s.id] || 0 }))].map(tab => (
           <button key={tab.id} onClick={() => setFilter(tab.id)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200"
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${filter !== tab.id ? 'whosin-filter-inactive' : ''}`}
             style={filter === tab.id
               ? { background: tab.color ? `${tab.color}18` : 'rgba(99,102,241,0.18)', border: `1px solid ${tab.color ? tab.color + '30' : 'rgba(99,102,241,0.3)'}`, color: tab.color || '#818cf8', boxShadow: `0 4px 16px ${tab.color ? tab.color + '20' : 'rgba(99,102,241,0.2)'}` }
               : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)' }
@@ -181,7 +181,7 @@ export default function WhosIn() {
           >
             {tab.icon && <tab.icon size={14} />}
             {tab.label}
-            <span className="text-xs px-1.5 py-0.5 rounded-full font-black"
+            <span className="whosin-filter-count text-xs px-1.5 py-0.5 rounded-full font-black"
               style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}>
               {tab.count}
             </span>
@@ -194,9 +194,9 @@ export default function WhosIn() {
         {Object.entries(byDept).map(([dept, emps]) => (
           <div key={dept} className="glass-card p-5">
             <div className="flex items-center gap-2 mb-4">
-              <Building2 size={14} className="text-white/30" />
-              <span className="text-white/60 text-sm font-bold">{dept}</span>
-              <span className="ml-auto text-white/25 text-xs">{emps.length} members</span>
+              <Building2 size={14} className="whosin-dept-icon text-white/30" />
+              <span className="whosin-dept-label text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>{dept}</span>
+              <span className="whosin-dept-count ml-auto text-xs" style={{ color: 'var(--text-muted)' }}>{emps.length} members</span>
             </div>
             <div className="space-y-2">
               {emps.map(emp => (
@@ -209,17 +209,17 @@ export default function WhosIn() {
 
       {/* Legend */}
       <div className="glass-card p-4">
-        <p className="text-white/30 text-xs font-bold uppercase tracking-wider mb-3">How to update status</p>
+        <p className="whosin-legend-title text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>How to update status</p>
         <div className="flex flex-wrap gap-4">
           {STATUSES.map(s => (
-            <div key={s.id} className="flex items-center gap-2 text-xs text-white/45">
+            <div key={s.id} className="whosin-legend-text flex items-center gap-2 text-xs" style={{ color: 'var(--text-secondary)' }}>
               <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: s.bg, border: `1px solid ${s.border}` }}>
                 <s.icon size={12} style={{ color: s.color }} />
               </div>
               {s.label}
             </div>
           ))}
-          <p className="text-white/25 text-xs ml-auto self-center">Click the icons on each row to update</p>
+          <p className="whosin-legend-hint text-xs ml-auto self-center" style={{ color: 'var(--text-faint)' }}>Click the icons on each row to update</p>
         </div>
       </div>
     </div>

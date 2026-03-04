@@ -180,7 +180,7 @@ export default function Spotlight() {
           const active = activeCategory === cat;
           return (
             <button key={cat} onClick={() => setActiveCategory(cat)}
-              className="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200"
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${!active ? 'spotlight-filter-inactive' : ''}`}
               style={active
                 ? { background: `linear-gradient(135deg, ${grad[0]}, ${grad[1]})`, color: 'white', boxShadow: `0 4px 20px ${grad[0]}40` }
                 : { background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.07)' }

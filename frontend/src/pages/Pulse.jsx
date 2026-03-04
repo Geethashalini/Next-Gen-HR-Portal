@@ -3,6 +3,7 @@ import { Activity, Send, TrendingUp, Users, Smile, Zap, Heart, Lock, BarChart2, 
 import { pulseAPI } from '../services/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import toast from 'react-hot-toast';
+import { useTheme } from '../context/ThemeContext';
 
 /* ─── Mood Config ──────────────────────────────────────────── */
 const MOODS = [
@@ -14,6 +15,7 @@ const MOODS = [
 
 /* ─── Score Ring ───────────────────────────────────────────── */
 function ScoreRing({ score }) {
+  const { isDark } = useTheme();
   const r = 70;
   const circ = 2 * Math.PI * r;
   const dash = (score / 100) * circ;
@@ -23,7 +25,7 @@ function ScoreRing({ score }) {
   return (
     <div className="flex flex-col items-center justify-center relative" style={{ width: 180, height: 180 }}>
       <svg width="180" height="180" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="12" />
+        <circle cx="90" cy="90" r={r} fill="none" stroke={isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.07)'} strokeWidth="12" />
         <circle cx="90" cy="90" r={r} fill="none" stroke={color} strokeWidth="12"
           strokeDasharray={circ} strokeDashoffset={circ - dash}
           strokeLinecap="round"
@@ -34,7 +36,7 @@ function ScoreRing({ score }) {
           const angle = (pct / 100) * 2 * Math.PI - Math.PI / 2;
           const x1 = 90 + (r - 8) * Math.cos(angle), y1 = 90 + (r - 8) * Math.sin(angle);
           const x2 = 90 + (r + 2) * Math.cos(angle), y2 = 90 + (r + 2) * Math.sin(angle);
-          return <line key={pct} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.15)" strokeWidth="2" />;
+          return <line key={pct} x1={x1} y1={y1} x2={x2} y2={y2} stroke={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'} strokeWidth="2" />;
         })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -80,6 +82,9 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 /* ─── Main Page ────────────────────────────────────────────── */
 export default function Pulse() {
+  const { isDark } = useTheme();
+  const chartGrid = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)';
+  const chartTick = isDark ? 'rgba(255,255,255,0.3)'  : '#64748b';
   const [pulseData, setPulseData] = useState(null);
   const [selectedMood, setSelectedMood] = useState(null);
   const [note, setNote] = useState('');
@@ -424,9 +429,9 @@ export default function Pulse() {
                 <stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-            <XAxis dataKey="date" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 100]} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
+            <XAxis dataKey="date" tick={{ fill: chartTick, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 100]} tick={{ fill: chartTick, fontSize: 11 }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Area type="monotone" dataKey="score" stroke="#6366f1" strokeWidth={2.5}
               fill="url(#pulseGrad)" dot={{ fill: '#6366f1', r: 4, strokeWidth: 0 }}

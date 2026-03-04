@@ -41,14 +41,14 @@ function AvatarStack({ members, max = 4 }) {
     <div className="flex items-center">
       {visible.map((m, i) => (
         <div key={m.employeeId} style={{ marginLeft: i === 0 ? 0 : -8, zIndex: visible.length - i }}>
-          <div className="rounded-full border-2" style={{ borderColor: '#080714' }}>
+          <div className="rounded-full border-2" style={{ borderColor: 'var(--bg-base)' }}>
             <Avatar photo={m.photo} initials={m.avatar} color={m.color} size="xs" shape="circle" />
           </div>
         </div>
       ))}
       {extra > 0 && (
         <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black text-white border-2 flex-shrink-0"
-          style={{ marginLeft: -8, background: 'rgba(99,102,241,0.4)', borderColor: '#080714', zIndex: 0 }}>
+          style={{ marginLeft: -8, background: 'rgba(99,102,241,0.4)', borderColor: 'var(--bg-base)', zIndex: 0 }}>
           +{extra}
         </div>
       )}

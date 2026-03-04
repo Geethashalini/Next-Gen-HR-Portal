@@ -40,8 +40,8 @@ export default function Header({ onMenuToggle }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const meta = routeMeta[location.pathname] || routeMeta['/'];
   const { Icon, color, label, sub } = meta;
-  const textPrimary   = isDark ? 'white'                  : '#1e0a2e';
-  const textSecondary = isDark ? 'rgba(255,255,255,0.35)'  : '#9333ea';
+  const textPrimary   = isDark ? 'white'                 : '#1e293b';
+  const textSecondary = isDark ? 'rgba(255,255,255,0.35)' : '#475569';
 
   // Global Ctrl+K / Cmd+K shortcut
   useEffect(() => {

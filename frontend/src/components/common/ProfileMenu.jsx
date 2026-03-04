@@ -28,12 +28,12 @@ function SettingsModal({ onClose }) {
   const Toggle = ({ value, onChange, label, sub }) => (
     <div className="flex items-center justify-between py-2.5">
       <div>
-        <p className="text-white/75 text-sm font-medium">{label}</p>
-        {sub && <p className="text-white/30 text-xs mt-0.5">{sub}</p>}
+        <p className="settings-toggle-label text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{label}</p>
+        {sub && <p className="settings-toggle-sub text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{sub}</p>}
       </div>
       <button onClick={() => onChange(!value)}
         className="relative w-10 h-5 rounded-full transition-all duration-300 flex-shrink-0"
-        style={{ background: value ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.1)' }}>
+        style={{ background: value ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(99,102,241,0.15)' }}>
         <span className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-300"
           style={{ left: value ? '22px' : '2px' }} />
       </button>
@@ -59,7 +59,7 @@ function SettingsModal({ onClose }) {
         </div>
 
         <div className="px-5 py-3 space-y-1">
-          <p className="text-white/30 text-[10px] font-black uppercase tracking-widest py-2">Notifications</p>
+          <p className="settings-section-title text-[10px] font-black uppercase tracking-widest py-2" style={{ color: 'var(--text-muted)' }}>Notifications</p>
           <div style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
             <Toggle value={notifEmail} onChange={setNotifEmail} label="Email Notifications" sub="Receive HR updates via email" />
           </div>
@@ -100,7 +100,7 @@ function PrivacyModal({ onClose }) {
       </div>
       <button onClick={() => onChange(!value)}
         className="relative w-10 h-5 rounded-full transition-all duration-300 flex-shrink-0"
-        style={{ background: value ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.1)' }}>
+        style={{ background: value ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(99,102,241,0.15)' }}>
         <span className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-300"
           style={{ left: value ? '22px' : '2px' }} />
       </button>
@@ -388,9 +388,9 @@ export default function ProfileMenu({ anchor = 'top' }) {
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-3 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+      <div className="profilemenu-footer-border px-4 py-3 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
         <button onClick={() => handleAction('settings')}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
+          className="profilemenu-settings-btn flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
           style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.09)'; e.currentTarget.style.color = 'white'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}>

@@ -121,18 +121,18 @@ function renderMarkdown(text) {
     .split('\n')
     .map((line, i) => {
       if (line.startsWith('**') && line.endsWith('**')) {
-        return <p key={i} className="font-black text-white/80 mt-3 mb-1 text-sm">{line.replace(/\*\*/g, '')}</p>;
+        return <p key={i} className="font-black text-white/80 mt-3 mb-1 text-sm" style={{ color: 'var(--text-primary)' }}>{line.replace(/\*\*/g, '')}</p>;
       }
       if (line.startsWith('• ')) {
         const content = line.slice(2).replace(/\*\*(.*?)\*\*/g, (_, m) => `<strong>${m}</strong>`);
-        return <p key={i} className="text-white/60 text-sm flex items-start gap-1.5 my-0.5" dangerouslySetInnerHTML={{ __html: `<span class="mt-1 flex-shrink-0">•</span><span>${content}</span>` }} />;
+        return <p key={i} className="text-sm flex items-start gap-1.5 my-0.5" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: `<span class="mt-1 flex-shrink-0">•</span><span>${content}</span>` }} />;
       }
       if (/^\d+\./.test(line)) {
         const content = line.replace(/\*\*(.*?)\*\*/g, (_, m) => `<strong>${m}</strong>`);
-        return <p key={i} className="text-white/60 text-sm my-0.5" dangerouslySetInnerHTML={{ __html: content }} />;
+        return <p key={i} className="text-sm my-0.5" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: content }} />;
       }
-      const content = line.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white/80 font-bold">$1</strong>');
-      return line ? <p key={i} className="text-white/60 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: content }} /> : <div key={i} className="h-1" />;
+      const content = line.replace(/\*\*(.*?)\*\*/g, `<strong style="color:var(--text-primary);font-weight:700">$1</strong>`);
+      return line ? <p key={i} className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }} dangerouslySetInnerHTML={{ __html: content }} /> : <div key={i} className="h-1" />;
     });
 }
 
@@ -152,7 +152,7 @@ function Message({ msg }) {
 
       <div className={`max-w-[82%] ${isBot ? '' : 'items-end flex flex-col'}`}>
         {/* Bubble */}
-        <div className="rounded-2xl px-4 py-3"
+        <div className={`rounded-2xl px-4 py-3 ${isBot ? 'askhr-bot-bubble' : 'askhr-user-bubble'}`}
           style={isBot
             ? { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }
             : { background: 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.15))', border: '1px solid rgba(99,102,241,0.25)' }
@@ -160,7 +160,7 @@ function Message({ msg }) {
           {isBot ? (
             <div className="space-y-0.5">{renderMarkdown(msg.text)}</div>
           ) : (
-            <p className="text-white/80 text-sm">{msg.text}</p>
+            <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{msg.text}</p>
           )}
         </div>
 
@@ -176,7 +176,7 @@ function Message({ msg }) {
           <div className="mt-2 flex flex-wrap gap-1.5">
             {msg.followups.map(q => (
               <button key={q} onClick={() => msg.onFollowup?.(q)}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium transition-all"
+                className="askhr-followup-btn flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-medium transition-all"
                 style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.08)' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.15)'; e.currentTarget.style.color = '#a5b4fc'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; }}
@@ -187,7 +187,7 @@ function Message({ msg }) {
           </div>
         )}
 
-        <p className="text-white/20 text-[10px] mt-1 px-1">{msg.time}</p>
+        <p className="text-white/20 text-[10px] mt-1 px-1" style={{ color: 'var(--text-faint)' }}>{msg.time}</p>
       </div>
     </div>
   );
@@ -201,7 +201,7 @@ function TypingIndicator() {
         style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
         <Bot size={15} className="text-white" />
       </div>
-      <div className="px-4 py-3 rounded-2xl flex items-center gap-1"
+      <div className="askhr-typing-bubble px-4 py-3 rounded-2xl flex items-center gap-1"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
         {[0, 1, 2].map(i => (
           <div key={i} className="w-2 h-2 rounded-full bg-white/40"
@@ -305,7 +305,7 @@ export default function AskHR() {
               <h1 className="text-white font-black text-lg leading-tight">Ask HR</h1>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-white/40 text-xs">Instant answers · Always available</span>
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Instant answers · Always available</span>
               </div>
             </div>
           </div>
@@ -325,11 +325,11 @@ export default function AskHR() {
       {/* Suggested Questions (shown when only 1 message) */}
       {messages.length === 1 && (
         <div className="flex-shrink-0 mb-4">
-          <p className="text-white/25 text-xs font-bold uppercase tracking-wider mb-2 px-1">Suggested questions</p>
+          <p className="text-xs font-bold uppercase tracking-wider mb-2 px-1" style={{ color: 'var(--text-muted)' }}>Suggested questions</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {SUGGESTIONS.map(({ q, icon }) => (
               <button key={q} onClick={() => sendMessage(q)}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-left transition-all"
+                className="askhr-suggestion-btn flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-left transition-all"
                 style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.55)' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.12)'; e.currentTarget.style.borderColor = 'rgba(99,102,241,0.25)'; e.currentTarget.style.color = '#a5b4fc'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)'; }}
@@ -353,7 +353,7 @@ export default function AskHR() {
 
       {/* Input */}
       <div className="flex-shrink-0 mt-3">
-        <div className="flex gap-3 items-end glass-card p-3"
+        <div className="flex gap-3 items-end glass-card askhr-input-area p-3"
           style={{ border: '1px solid rgba(99,102,241,0.2)' }}>
           <textarea
             ref={inputRef}
@@ -362,8 +362,8 @@ export default function AskHR() {
             onKeyDown={handleKey}
             placeholder="Ask anything about leave, salary, benefits, WFH…"
             rows={1}
-            className="flex-1 bg-transparent text-white/80 text-sm outline-none placeholder-white/25 resize-none"
-            style={{ maxHeight: 100 }}
+            className="flex-1 bg-transparent text-sm outline-none resize-none"
+            style={{ color: 'var(--text-primary)', maxHeight: 100 }}
           />
           <button
             onClick={() => sendMessage(input)}
@@ -377,7 +377,7 @@ export default function AskHR() {
             <Send size={15} className={input.trim() ? 'text-white' : 'text-white/20'} />
           </button>
         </div>
-        <p className="text-white/15 text-xs text-center mt-2">
+        <p className="text-xs text-center mt-2" style={{ color: 'var(--text-faint)' }}>
           Press Enter to send · For urgent matters, contact Meera Nair directly
         </p>
       </div>

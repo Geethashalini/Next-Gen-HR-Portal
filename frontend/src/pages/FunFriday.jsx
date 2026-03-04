@@ -474,7 +474,7 @@ function AdminFridayView({ suggestions, polls, onRefresh }) {
           { id:'create',      label:`➕ Create Poll` },
         ].map(t => (
           <button key={t.id} onClick={()=>setTab(t.id)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all"
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all ${tab!==t.id ? 'funfriday-tab-inactive' : ''}`}
             style={tab===t.id
               ? {background:'linear-gradient(135deg,#ec4899,#6366f1)',color:'white',boxShadow:'0 4px 16px rgba(236,72,153,0.3)'}
               : {background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.5)',border:'1px solid rgba(255,255,255,0.08)'}
@@ -795,7 +795,7 @@ export default function FunFriday() {
             <div className="flex gap-2 flex-wrap">
               {tabs.filter(t=>t.show).map(tab => (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  className="px-5 py-2.5 rounded-2xl text-sm font-bold transition-all"
+                  className={`px-5 py-2.5 rounded-2xl text-sm font-bold transition-all ${activeTab!==tab.id ? 'funfriday-tab-inactive' : ''}`}
                   style={activeTab===tab.id
                     ? {background:'linear-gradient(135deg, #ec4899, #6366f1)', color:'white', boxShadow:'0 4px 20px rgba(236,72,153,0.35)'}
                     : {background:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.5)', border:'1px solid rgba(255,255,255,0.08)'}

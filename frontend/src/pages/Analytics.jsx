@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, Users, Trophy, Heart, Megaphone } from 'lucide-react';
 import Avatar from '../components/common/Avatar';
+import { useTheme } from '../context/ThemeContext';
 
 const empPhotos = {
   emp001: 'https://randomuser.me/api/portraits/men/32.jpg',
@@ -57,6 +58,9 @@ function StatCard({ icon: Icon, label, value, color, sub }) {
 }
 
 export default function Analytics() {
+  const { isDark } = useTheme();
+  const chartGrid  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+  const chartTick  = isDark ? 'rgba(255,255,255,0.4)'  : '#64748b';
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -113,9 +117,9 @@ export default function Analytics() {
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={data.monthlyEngagement}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="month" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
+              <XAxis dataKey="month" tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }} />
               <Line type="monotone" dataKey="kudos" stroke="#ec4899" strokeWidth={2} dot={{ fill: '#ec4899', r: 3 }} name="Kudos" />
@@ -170,8 +174,8 @@ export default function Analytics() {
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={kudosCatData} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-              <XAxis type="number" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} horizontal={false} />
+              <XAxis type="number" tick={{ fill: chartTick, fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis dataKey="name" type="category" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} axisLine={false} tickLine={false} width={90} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="value" fill="#ec4899" radius={[0, 4, 4, 0]} name="Kudos">
@@ -221,9 +225,9 @@ export default function Analytics() {
         </h3>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={achievDeptData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="name" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
+            <XAxis dataKey="name" tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: chartTick, fontSize: 12 }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="value" name="Achievements" radius={[4, 4, 0, 0]}>
               {achievDeptData.map((_, idx) => (

@@ -62,14 +62,17 @@ export default function Sidebar({ isOpen, onClose }) {
   const isAdmin = user?.keycloakRoles?.includes('hr-admin');
   const userInitials = user?.avatar || user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'U';
   const userColor = user?.color || '#6366f1';
-  const textMuted   = isDark ? 'rgba(255,255,255,0.4)' : '#9333ea';
-  const textPrimary = isDark ? 'rgba(255,255,255,0.85)' : '#1e0a2e';
-  const textAccent  = isDark ? 'rgba(139,92,246,0.7)'   : '#ec4899';
+  const textMuted   = isDark ? 'rgba(255,255,255,0.4)' : '#64748b';
+  const textPrimary = isDark ? 'rgba(255,255,255,0.85)' : '#1e293b';
+  const textAccent  = isDark ? 'rgba(139,92,246,0.7)'   : '#6366f1';
 
   // Dynamically add admin link for hr-admin users
   const items = isAdmin
     ? [...navItems, { path: '/admin', icon: Shield, label: 'HR Admin', color: '#f97316', badge: 'Admin' }]
     : navItems;
+
+  const iconInactiveColor = isDark ? 'rgba(255,255,255,0.45)' : '#64748b';
+  const iconBgInactive    = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(99,102,241,0.06)';
 
   const handleMouseEnter = () => {
     clearTimeout(hoverTimeout.current);
@@ -204,7 +207,7 @@ export default function Sidebar({ isOpen, onClose }) {
               style={({ isActive }) => ({
                 padding: '10px',
                 gap: 10,
-                color: isActive ? 'white' : textMuted,
+                color: isActive ? (isDark ? 'white' : color) : textMuted,
                 background: isActive
                   ? `linear-gradient(135deg, ${color}20, ${color}0a)`
                   : 'transparent',
@@ -219,12 +222,12 @@ export default function Sidebar({ isOpen, onClose }) {
                     style={{
                       width: 32, height: 32,
                       borderRadius: 12,
-                      background: isActive ? `${color}20` : 'rgba(255,255,255,0.04)',
+                      background: isActive ? `${color}20` : iconBgInactive,
                       boxShadow: isActive ? `0 0 16px ${color}35` : 'none',
                       transition: 'all 0.2s ease',
                       minWidth: 32,
                     }}>
-                    <Icon size={16} style={{ color: isActive ? color : 'rgba(255,255,255,0.45)' }} />
+                    <Icon size={16} style={{ color: isActive ? color : iconInactiveColor }} />
                   </div>
 
                   {/* Label + badge */}
@@ -235,7 +238,7 @@ export default function Sidebar({ isOpen, onClose }) {
                     transition: 'opacity 0.18s ease 0.06s, transform 0.18s ease 0.06s',
                     whiteSpace: 'nowrap', overflow: 'hidden',
                   }}>
-                    <span style={{ color: isActive ? 'white' : undefined, flex: 1 }}>{label}</span>
+                    <span style={{ color: isActive ? (isDark ? 'white' : color) : undefined, flex: 1 }}>{label}</span>
                     {badge && !isActive && (
                       <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0"
                         style={{ background: `${color}20`, color }}>
